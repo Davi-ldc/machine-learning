@@ -29,5 +29,4 @@ import math
 def sigmoid(x):
     return 1 / (1 + math.exp(-x))
 
-
 #no trinamento, o algoritimo vai tentar prever o mlhr valor de y
