@@ -37,7 +37,7 @@ print(test.isnull().sum())
 
 
 #divisão entre previsores e classes
-dados_previsores_treinamento = train.iloc[:, 1:].values
+dados_previsores_treinamento = train.iloc[:, 2:].values
 classes_treinamento = train.iloc[:, 0].values
 
 dados_previsores_teste = test.iloc[:, 1:].values
@@ -47,11 +47,12 @@ classes_teste = test.iloc[:, 0].values
 
 #transformação dos dados
 lb = LabelEncoder()
-for c in range(1, 7):
+for c in range(1, 6):
     dados_previsores_treinamento[:, c] = lb.fit_transform(dados_previsores_treinamento[:, c])
 
-for c in range(1, 7):
+for c in range(1, 6):
     dados_previsores_teste[:, c] = lb.fit_transform(dados_previsores_teste[:, c])
+
 
 
 #tudo perfeito
