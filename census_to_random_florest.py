@@ -11,11 +11,14 @@ with open('data/census.csv') as f:
 variaveis_previsoras = data.iloc[:, 0:14].values
 classes = data.iloc[:, 14].values
 
-label = LabelEncoder()
-for c in range(1, 14):
-    if c == 2 or c == 10 or c == 11 or c == 12: # colunas que ja sao numericas
-        continue
-    variaveis_previsoras[:, c] = label.fit_transform(variaveis_previsoras[:, c])
+label = LabelEncoder() 
+for c in range(1, 14): 
+    if c == 2 or c == 10 or c == 11 or c == 12: # colunas que ja sao numericas 
+        continue 
+    variaveis_previsoras[:, c] = label.fit_transform(variaveis_previsoras[:, c]) 
+    
+    Q_numero_cada_str_recebeu = dict(zip(label.classes_, label.transform(label.classes_)))
+    print(Q_numero_cada_str_recebeu)
 
 variaveis_previsoras_treino, variaveis_previsoras_teste, classes_treino, classes_teste = train_test_split(variaveis_previsoras, classes, test_size=0.3, random_state=0)
 
