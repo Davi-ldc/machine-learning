@@ -38,10 +38,11 @@ train = train.drop(train[train.Embarked.isnull()].index)
 
 
 #divisão entre previsores e classes
-dados_previsores_treinamento = train.iloc[:, 2:].values
+print(train.iloc[:, 0].values)
+dados_previsores_treinamento = train.iloc[:, 1:].values
 classes_treinamento = train.iloc[:, 0].values
 
-dados_previsores_teste = test.iloc[:, 1:].values
+dados_previsores_teste = test.iloc[:, 0:].values
 
 #transformação dos dados
 lb = LabelEncoder()
@@ -58,3 +59,4 @@ svm.fit(dados_previsores_treinamento, classes_treinamento)
 
 previsoes = svm.predict(dados_previsores_teste)
 print(previsoes)
+
