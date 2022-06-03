@@ -1,4 +1,4 @@
-import pickle 
+import pickle
 from sklearn.neural_network import MLPClassifier
 from sklearn.metrics import accuracy_score
 
@@ -7,7 +7,14 @@ with open('data/census.pkl', 'rb') as f:
     variaveis_previsoras_treinamento, classes_treinamento, variaveis_previsoras_teste, classes_teste = pickle.load(f)
 
 
-rede_neural = MLPClassifier(max_iter=1000, tol=0.0001)
-#                       maximo de iteracoes, tolerancia(se a rede nao melhorar mais do que a tolerancia o treinamento para)
+rede_neural = MLPClassifier(max_iter=1000, verbose=True, hidden_layer_sizes = (120, 120, 120), tol=0.00000001)
+#max_iter = maximo de iteracoes, 
+# tol = tolerancia(se a rede nao melhorar mais do que a tolerancia o treinamento para)
+#verbose=True, mostra o progresso do treinamento
 
-rede_neural.fit(variaveis_previsoras_treinamento, classes_treinamento)
+rede_neural.fit(variaveis_previsoras_treinamento, classes_treinamento) #0.8178096212896623
+
+previzões = rede_neural.predict(variaveis_previsoras_teste)
+
+pontuação = accuracy_score(classes_teste, previzões)
+print(pontuação)
