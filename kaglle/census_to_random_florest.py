@@ -31,8 +31,6 @@ pontuação = accuracy_score(previzões, classes_teste)#0.8575084450813799
 print(pontuação)
 
 
-
-
 from yellowbrick.classifier import ConfusionMatrix, ClassificationReport
 
 cm = ClassificationReport(floresta)
