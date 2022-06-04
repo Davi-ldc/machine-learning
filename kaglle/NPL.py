@@ -15,8 +15,6 @@ dados = treinamento.append(teste)
 cv = CountVectorizer()
 vetor = cv.fit(dados['sentence'])
 
-treinamento = cv.transform(treinamento['sentence'])
-teste = cv.transform(teste['sentence'])
 
 #divide os dados
 
@@ -26,6 +24,8 @@ classes_treinamento = treinamento.iloc[:, 1].values
 dados_previsores_teste = teste.iloc[:, 0].values
 classes_teste = teste.iloc[:, 1].values
 
+dados_previsores_treinamento = vetor.transform(dados_previsores_treinamento)
+dados_previsores_teste = vetor.transform(dados_previsores_teste)
 
 def emotions(string,vector,model):
      vectorized = vector.transform([string])
@@ -35,7 +35,7 @@ def emotions(string,vector,model):
 #aplica a rede neural
 from sklearn.neural_network import MLPClassifier
 
-neural_network = MLPClassifier(verbose=True, max_iter=100, tol=0.001, solver='adam', hidden_layer_sizes=(100, 100, 100), random_state=1)
+neural_network = MLPClassifier(verbose=True, max_iter=1000, tol=0.000000001, solver='adam', hidden_layer_sizes=(150, 150, 150), random_state=1)
 
 #treina a rede neural
 neural_network.fit(dados_previsores_treinamento, classes_treinamento)
@@ -48,3 +48,10 @@ previsoes = neural_network.predict(dados_previsores_teste)
 #pontuação
 pontuação = accuracy_score(classes_teste, previsoes)
 print(pontuação)
+
+# from yellowbrick.classifier import ClassificationReport
+
+# cm = ClassificationReport(neural_network)
+# cm.fit(dados_previsores_treinamento, classes_treinamento)
+# cm.score(dados_previsores_teste, classes_teste)
+# cm.poof()

@@ -18,3 +18,10 @@ previzões = rede_neural.predict(variaveis_previsoras_teste)
 
 pontuação = accuracy_score(classes_teste, previzões)
 print(pontuação)
+
+from yellowbrick.classifier import ConfusionMatrix, ClassificationReport
+
+cm = ClassificationReport(rede_neural, classes=['<=50K', '>50K'])
+cm.fit(variaveis_previsoras_treinamento, classes_treinamento)
+cm.score(variaveis_previsoras_teste, classes_teste)
+cm.poof()
