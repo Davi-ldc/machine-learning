@@ -3,7 +3,7 @@ import numpy as np
 from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import accuracy_score
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, GridSearchCV
 
 with open('data/census.csv') as f:
     data = pd.read_csv(f)
@@ -18,16 +18,26 @@ for c in range(1, 14):
     variaveis_previsoras[:, c] = label.fit_transform(variaveis_previsoras[:, c]) 
     
     Q_numero_cada_str_recebeu = dict(zip(label.classes_, label.transform(label.classes_)))
-    print(Q_numero_cada_str_recebeu)
+    # print(Q_numero_cada_str_recebeu)
 
 variaveis_previsoras_treino, variaveis_previsoras_teste, classes_treino, classes_teste = train_test_split(variaveis_previsoras, classes, test_size=0.3, random_state=0)
 
-floresta = RandomForestClassifier(n_estimators=100, criterion='entropy', random_state=0)
+
+floresta = RandomForestClassifier(n_estimators=150, criterion="entropy",min_samples_leaf=10, random_state=0)
+
+# parametros = {'n_estimators': [50, 100, 150], 'criterion': ['gini', 'entropy'], 'min_samples_split': [2, 3, 4, 5, 7, 10]}
+# GridSearch = GridSearchCV(estimator=floresta, param_grid=parametros, scoring='accuracy', cv=None)
+# #                        algoritimo         possiveis parametros     metodo de avaliacao   validação crusada(numero de pedaços em que a base vai se dividir) 
+# #(demora MUITO pra achar os mlhrs parametros)
+# GridSearch.fit(variaveis_previsoras_treino, classes_treino)
+# melhores_parametros = GridSearch.best_params_
+# melhor_pontuação = GridSearch.best_score_
+# print(melhores_parametros, melhor_pontuação)
 
 floresta.fit(variaveis_previsoras_treino, classes_treino)
 
 previzões = floresta.predict(variaveis_previsoras_teste)
-pontuação = accuracy_score(previzões, classes_teste)#0.8575084450813799
+pontuação = accuracy_score(previzões, classes_teste)#0.8615006653700481
 print(pontuação)
 
 
