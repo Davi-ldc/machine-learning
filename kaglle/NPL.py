@@ -51,7 +51,7 @@ print(pontuação)
 
 from yellowbrick.classifier import ClassificationReport
 
-cm = ClassificationReport(floresMLPClassifier)
+cm = ClassificationReport(rede_neural)
 cm.fit(dados_previsores_treinamento, classes_treinamento)
 cm.score(dados_previsores_teste, classes_teste)
 cm.poof()
