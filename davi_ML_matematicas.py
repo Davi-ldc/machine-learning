@@ -14,4 +14,3 @@ def gini(s):
     p = [s.count(i) / n for i in range(max(s) + 1)]
     return sum([p[i] ** 2 for i in range(len(p))])
 
-

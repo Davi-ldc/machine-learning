@@ -7,7 +7,7 @@ from sklearn.metrics import accuracy_score
 with open('data/census.pkl', 'rb') as f:
     variaveis_previsoras_treinamento, classes_treinamento, variaveis_previsoras_teste, classes_teste = pickle.load(f)
     
-svm = SVC(C=2.0, random_state=1)
+svm = SVC(C=2.0, probability=True, random_state=1)
 
 svm.fit(variaveis_previsoras_treinamento, classes_treinamento)
 
