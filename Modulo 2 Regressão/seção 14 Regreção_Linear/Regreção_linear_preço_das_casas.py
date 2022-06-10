@@ -4,7 +4,8 @@ import seaborn as sns
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 
-data = pd.read_csv('data/house_prices.csv')
+with open('data/house_prices.csv', 'r') as f:
+    data = pd.read_csv(f)
 """
 #price(preço)
 #bedrooms(quartos)
@@ -32,10 +33,13 @@ data = pd.read_csv('data/house_prices.csv')
 figura = plt.figure(figsize=(15,15))
 sns.heatmap(data.corr(), annot=True)#quem tem a maior correlação com o preço é a metragem² de casa
 plt.show() #zip code e id são desnecessários (tem corelação negativa)
+#annot = True mostra os valores das correlações
+#data.corr() mostra a correlação entre as variaveis
 
-
-variaveis_previsoras = data.iloc[:, 3:19].values
+data.drop(['zipcode'], axis=1)
+variaveis_previsoras = data.iloc[:, 3:].values
 classe = data.iloc[:,2].values
+#n vamo usar o id, a data
 
 
 #divide a base d dados
@@ -60,7 +64,7 @@ mean_squared_error = (abs(previzões - classe_teste).mean())**2
 root_mean_squared_error = ((abs(previzões - classe_teste).mean())**2) **0.5
 
 
-print(regreção_linear.score(variaveis_previsoras_teste, classe_teste))
+print(regreção_linear.score(variaveis_previsoras_teste, classe_teste)) #0.6877902899299262
 
 #grafico 3d com a linha de regressão, as previzões e os as classes
 from mpl_toolkits.mplot3d import Axes3D
