@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import plotly.express as px
 from sklearn.model_selection import train_test_split
-from sklearn.tree import DecisionTreeRegressor
+from sklearn.svm import SVR
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import mean_absolute_error
 
@@ -34,9 +34,9 @@ with open('data/house_prices.csv', 'r') as f:
 
 
 #grafico correlacao das variaveis
-figura = plt.figure(figsize=(15,15))
-sns.heatmap(data.corr(), annot=True)#quem tem a maior correlação com o preço é a metragem² de casa
-plt.show() #zip code e id são desnecessários (tem corelação negativa)
+#figura = plt.figure(figsize=(15,15))
+#sns.heatmap(data.corr(), annot=True)#quem tem a maior correlação com o preço é a metragem² de casa
+#plt.show() #zip code e id são desnecessários (tem corelação negativa)
 #annot = True mostra os valores das correlações
 #data.corr() mostra a correlação entre as variaveis
 
@@ -49,22 +49,28 @@ variaveis_previsoras_treino, variaveis_previsoras_teste, classe_treino, classe_t
 
 
 #padronização
-scaler = StandardScaler()
-scaler.fit(X=variaveis_previsoras_treino, y=classe_treino)
-variaveis_previsoras_treino = scaler.transform(variaveis_previsoras_treino)
-variaveis_previsoras_teste = scaler.transform(variaveis_previsoras_teste)
-classe_treino = scaler.fit_transform(classe_treino.reshape(-1, 1))
-classe_teste = scaler.fit_transform(classe_teste.reshape(-1, 1))
+scaler_previsor = StandardScaler()
+scaler_classe = StandardScaler()
+variaveis_previsoras_treino = scaler_previsor.fit_transform(variaveis_previsoras_treino)
+variaveis_previsoras_teste = scaler_previsor.transform(variaveis_previsoras_teste)
+classe_treino = scaler_classe.fit_transform(classe_treino.reshape(-1, 1))
+classe_teste = scaler_classe.transform(classe_teste.reshape(-1, 1))
  
 
 
 #aplicação do algoritmo
-arvore = DecisionTreeRegressor(random_state=0)
-arvore.fit(variaveis_previsoras_treino, classe_treino)#treina
+svr = SVR(kernel='rbf', C=2)
+#kernel = linear, poly, rbf
+#kernel linear é reponsavel por tornar os dados linearmente separaveis
+#Para criar um hiperplano não linear, usamos as funções RBF e Polinomial.
+#C = constante de regularização
+svr.fit(variaveis_previsoras_treino, classe_treino.ravel())
+previsoes = svr.predict(variaveis_previsoras_teste)
 
-previzões = arvore.predict(variaveis_previsoras_teste)
-erro = mean_absolute_error(classe_teste, previzões)
-print(erro)#0.2684743760903499
-
-pontuação = arvore.score(variaveis_previsoras_teste, classe_teste)
-print(pontuação)#0.7582442245931977
+pontuação = svr.score(variaveis_previsoras_teste, classe_teste)
+print(pontuação) # 0.7626840846410782
+"""
+kernel linear(c=2) = 0.6412486671854154
+kernel polinoimal(c=1) = 0.6983434514528427
+kernel rbf(c=2) = 0.7626840846410782
+"""

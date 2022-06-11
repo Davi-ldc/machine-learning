@@ -4,13 +4,13 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import plotly.express as px
 from sklearn.model_selection import train_test_split
-from sklearn.tree import DecisionTreeRegressor
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import mean_absolute_error
+from sklearn.neural_network import MLPRegressor
 
 with open('data/house_prices.csv', 'r') as f:
     data = pd.read_csv(f)
-    
+
 """
 #price(preço)
 #bedrooms(quartos)
@@ -32,6 +32,7 @@ with open('data/house_prices.csv', 'r') as f:
 #sqft_lot15(metragem² do lote no ultimo ano)
 """
 
+#print(data.isnull().sum())#n tem dados nulos
 
 #grafico correlacao das variaveis
 figura = plt.figure(figsize=(15,15))
@@ -43,9 +44,12 @@ plt.show() #zip code e id são desnecessários (tem corelação negativa)
 data.drop(['zipcode'], axis=1)
 variaveis_previsoras = data.iloc[:, 3:].values
 classe = data.iloc[:,2].values
+#n vamo usar o id, a data
+
 
 #divide a base d dados
 variaveis_previsoras_treino, variaveis_previsoras_teste, classe_treino, classe_teste = train_test_split(variaveis_previsoras, classe, test_size=0.3, random_state=0)
+
 
 
 #padronização
@@ -55,16 +59,11 @@ variaveis_previsoras_treino = scaler.transform(variaveis_previsoras_treino)
 variaveis_previsoras_teste = scaler.transform(variaveis_previsoras_teste)
 classe_treino = scaler.fit_transform(classe_treino.reshape(-1, 1))
 classe_teste = scaler.fit_transform(classe_teste.reshape(-1, 1))
- 
 
 
 #aplicação do algoritmo
-arvore = DecisionTreeRegressor(random_state=0)
-arvore.fit(variaveis_previsoras_treino, classe_treino)#treina
+rede_neural = MLPRegressor(hidden_layer_sizes=(30, 30, 30), max_iter=1000, verbose=True, tol=0.0000001, random_state=0)
+rede_neural.fit(X=variaveis_previsoras_treino, y=classe_treino)
 
-previzões = arvore.predict(variaveis_previsoras_teste)
-erro = mean_absolute_error(classe_teste, previzões)
-print(erro)#0.2684743760903499
-
-pontuação = arvore.score(variaveis_previsoras_teste, classe_teste)
-print(pontuação)#0.7582442245931977
+pontuação = rede_neural.score(X=variaveis_previsoras_teste, y=classe_teste.ravel())
+print(pontuação) #0.878318256964171
