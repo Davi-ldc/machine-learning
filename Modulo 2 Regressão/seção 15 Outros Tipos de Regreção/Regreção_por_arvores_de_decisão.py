@@ -67,6 +67,3 @@ print(erro)#0.2684743760903499
 
 pontuação = arvore.score(variaveis_previsoras_teste, classe_teste)
 print(pontuação)#0.7582442245931977
-
-
-#grafico pontuação algoritimo 

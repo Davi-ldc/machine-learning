@@ -13,6 +13,7 @@ from sklearn.ensemble import RandomForestRegressor
 
 with open('data/house_prices.csv', 'r') as f:
     data = pd.read_csv(f)
+
 """
 #price(preço)
 #bedrooms(quartos)
