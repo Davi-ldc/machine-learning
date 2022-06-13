@@ -1,4 +1,3 @@
-#NÃO FUNCIONA
 import pandas as pd
 import numpy as np
 from sklearn.metrics import accuracy_score
@@ -7,6 +6,8 @@ from sklearn.feature_extraction.text import CountVectorizer
 treinamento = pd.read_csv("https://raw.githubusercontent.com/Davi-ldc/machine-learnig/master/data/emotions_train.txt", sep=";", names=["sentence", "emotion"])
 teste = pd.read_csv("https://raw.githubusercontent.com/Davi-ldc/machine-learnig/master/data/emotions_test.txt", sep=";", names=["sentence", "emotion"])
 data = treinamento.append(teste)
+
+treinamento.head(27)
 
 
 cv = CountVectorizer()
@@ -39,5 +40,10 @@ rede_neural.fit(dados_previsores_treinamento, classes_treinamento)
 previsoes = rede_neural.predict(dados_previsores_teste)
 
 #pontuação
-pontuação = accuracy_score(classes_teste, previsoes)
-print(pontuação)#0.8435
+pontuação = accuracy_score(classes_teste, previsoes)#0.8435
+print(pontuação)
+
+while True:
+  txt = input("escreve algo")
+  print(txt)
+  print(emotions(txt, vector, rede_neural))
