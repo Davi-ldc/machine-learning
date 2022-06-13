@@ -43,7 +43,21 @@ previsoes = rede_neural.predict(dados_previsores_teste)
 pontuação = accuracy_score(classes_teste, previsoes)#0.8435
 print(pontuação)
 
+from yellowbrick.classifier import ConfusionMatrix, ClassificationReport
+cm = ClassificationReport(rede_neural)
+cm.fit(dados_previsores_treinamento, classes_treinamento)
+cm.score(dados_previsores_teste, classes_teste)
+cm.poof()
+
+#grafico da pontuação dele
+cm2 = ConfusionMatrix(rede_neural)
+cm2.fit(dados_previsores_treinamento, classes_treinamento)
+cm2.score(dados_previsores_teste, classes_teste)
+cm2.poof()
+
+
 while True:
   txt = input("escreve algo")
   print(txt)
   print(emotions(txt, vector, rede_neural))
+
