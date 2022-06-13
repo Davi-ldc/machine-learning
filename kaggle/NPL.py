@@ -40,4 +40,4 @@ previsoes = rede_neural.predict(dados_previsores_teste)
 
 #pontuação
 pontuação = accuracy_score(classes_teste, previsoes)
-print(pontuação)
+print(pontuação)#0.8435
