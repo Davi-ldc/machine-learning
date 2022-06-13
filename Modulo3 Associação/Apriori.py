@@ -7,6 +7,8 @@
 import pandas as pd
 from apyori import apriori
 
-with open('data/teste_associação.csv', 'r') as f:
+with open('data/mercado.csv', 'r') as f:
     data = pd.read_csv(f)
-    
+
+regras = apriori(data, min_support=0.3, min_confidence=0.8)
+print(list(regras))
