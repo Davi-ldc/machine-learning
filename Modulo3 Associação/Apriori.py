@@ -10,5 +10,5 @@ from apyori import apriori
 with open('data/mercado.csv', 'r') as f:
     data = pd.read_csv(f)
 
-regras = apriori(data, min_support=0.3, min_confidence=0.8)
+regras = apriori(data, min_support=0.003, min_confidence=0.2, min_lift=3)
 print(list(regras))
