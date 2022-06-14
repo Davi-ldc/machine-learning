@@ -65,7 +65,7 @@ def emotions(string,vector,model):
 #aplica a rede neural
 from sklearn.neural_network import MLPClassifier
 
-rede_neural = MLPClassifier(verbose=True, max_iter=1000, tol=0.0000001, hidden_layer_sizes=(50, 50, 50), random_state=0)
+rede_neural = MLPClassifier(verbose=True, max_iter=1000, tol=0.00000000000001, hidden_layer_sizes=(100, 100, 100, 100, 100), random_state=0)
 
 #treina a rede neural
 rede_neural.fit(dados_previsores_treinamento, classes_treinamento)
@@ -76,7 +76,7 @@ previsoes = rede_neural.predict(dados_previsores_teste)
 
 #pontuação
 pontuação = accuracy_score(classes_teste, previsoes)
-print(pontuação)#0.8525
+print(pontuação)#0.8625
 
 from yellowbrick.classifier import ConfusionMatrix, ClassificationReport
 cm = ClassificationReport(rede_neural)
@@ -95,3 +95,5 @@ while True:
   txt = input("escreve algo")
   print(txt)
   print(emotions(txt, vector, rede_neural))
+
+
