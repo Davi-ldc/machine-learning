@@ -24,7 +24,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.cluster import KMeans
 from sklearn.datasets import make_blobs
 
-variaveis_previsoras_aleatorias, classes_aleatórias = make_blobs(n_samples=200, centers=5, cluster_std=1.0)
+variaveis_previsoras_aleatorias, classes_aleatórias = make_blobs(n_samples=200, centers=5)
 
 grafico_dados = px.scatter(x=variaveis_previsoras_aleatorias[:, 0], y=variaveis_previsoras_aleatorias[:, 1])
 grafico_dados.show()
