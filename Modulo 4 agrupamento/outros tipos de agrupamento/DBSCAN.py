@@ -24,7 +24,7 @@ variaveis_previsoras = data.iloc[:, [1,2,3,4,5,25]].values
 scaler = StandardScaler()
 variaveis_previsoras = scaler.fit_transform(variaveis_previsoras)
 
-dbscan = DBSCAN(eps=0.3, min_samples=5)
+dbscan = DBSCAN(eps=0.37, min_samples=5)
 #esp é o tamnho do raio de vizinhança
 #min_samples é o número mínimo de vizinhos pra ser considerado um grupo
 
