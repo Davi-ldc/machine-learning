@@ -27,3 +27,4 @@ previsoes = dbscan.fit_predict(variaveis_previsoras)
 
 grafico_dbscan = px.scatter(x=variaveis_previsoras[:, 0], y=variaveis_previsoras[:, 1], color=previsoes)
 grafico_dbscan.show()
+
