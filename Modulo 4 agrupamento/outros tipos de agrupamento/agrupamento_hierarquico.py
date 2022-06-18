@@ -30,8 +30,8 @@ print(variaveis_previsoras)
 
 # dendrograma = hierarchy.dendrogram(hierarchy.linkage(variaveis_previsoras, method='ward'))
 
-Agrupamento_hierarquico = AgglomerativeClustering(n_clusters=5, affinity='euclidean', linkage='ward')
-previsões = Agrupamento_hierarquico.fit_predict(variaveis_previsoras)
+# Agrupamento_hierarquico = AgglomerativeClustering(n_clusters=5, affinity='euclidean', linkage='ward')
+# previsões = Agrupamento_hierarquico.fit_predict(variaveis_previsoras)
 
-grafico_agrupamento_hierarquico = px.scatter(x = variaveis_previsoras[:,0], y = variaveis_previsoras[:,1], color = previsões)
-grafico_agrupamento_hierarquico.show()
+# grafico_agrupamento_hierarquico = px.scatter(x = variaveis_previsoras[:,0], y = variaveis_previsoras[:,1], color = previsões)
+# grafico_agrupamento_hierarquico.show()
