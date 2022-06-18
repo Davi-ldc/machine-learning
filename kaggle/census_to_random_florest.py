@@ -3,7 +3,7 @@ import numpy as np
 from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import accuracy_score
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.model_selection import train_test_split
 
 with open('data/census.csv') as f:
     data = pd.read_csv(f)
@@ -25,14 +25,6 @@ variaveis_previsoras_treino, variaveis_previsoras_teste, classes_treino, classes
 
 floresta = RandomForestClassifier(n_estimators=150, criterion="entropy",min_samples_leaf=10, random_state=0)
 
-# parametros = {'n_estimators': [50, 100, 150], 'criterion': ['gini', 'entropy'], 'min_samples_split': [2, 3, 4, 5, 7, 10]}
-# GridSearch = GridSearchCV(estimator=floresta, param_grid=parametros, scoring='accuracy', cv=None)
-# #                        algoritimo         possiveis parametros     metodo de avaliacao   validação crusada(numero de pedaços em que a base vai se dividir) 
-# #(demora MUITO pra achar os mlhrs parametros)
-# GridSearch.fit(variaveis_previsoras_treino, classes_treino)
-# melhores_parametros = GridSearch.best_params_
-# melhor_pontuação = GridSearch.best_score_
-# print(melhores_parametros, melhor_pontuação)
 
 floresta.fit(variaveis_previsoras_treino, classes_treino)
 
@@ -53,4 +45,3 @@ cm2 = ConfusionMatrix(floresta)
 cm2.fit(variaveis_previsoras_treino, classes_treino)
 cm2.score(variaveis_previsoras_teste, classes_teste) 
 cm2.poof()
- 
