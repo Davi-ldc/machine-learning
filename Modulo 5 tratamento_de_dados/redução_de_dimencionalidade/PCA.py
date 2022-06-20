@@ -14,8 +14,10 @@
 
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder
-from sklearn.decomposition import PCA
+from sklearn.decomposition import PCA, KernelPCA
 from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score
 
 with open('data/census.csv') as f:
     data = pd.read_csv(f)
@@ -40,3 +42,22 @@ pca = PCA(n_components=2)
 menos_atributos_treinamento = pca.fit_transform(variaveis_previsoras_treino)
 menos_atributos_teste = pca.transform(variaveis_previsoras_teste)
 #os atributos mais corelacionados serão unidos
+
+floresta = RandomForestClassifier(n_estimators=100, random_state=0)
+floresta.fit(menos_atributos_treinamento, classes_treino)
+previsoes = floresta.predict(menos_atributos_teste)
+
+pontuação = accuracy_score(classes_teste, previsoes)
+print(pontuação)
+
+
+# kernel_pca = KernelPCA(n_components=2, kernel='rbf')
+# menos_atributos_treinamento = kernel_pca.fit_transform(variaveis_previsoras_treino)
+# menos_atributos_teste = kernel_pca.transform(variaveis_previsoras_teste)
+    
+# floresta = RandomForestClassifier(n_estimators=100, random_state=0) 
+# floresta.fit(menos_atributos_treinamento, classes_treino)
+# previsoes = floresta.predict(menos_atributos_teste)
+    
+# pontuação = accuracy_score(classes_teste, previsoes)
+# print(pontuação)
