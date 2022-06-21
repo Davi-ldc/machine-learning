@@ -28,4 +28,3 @@ plt.show() #mostra a arvore
 
 # previsoes = arvore.predict([[0,0,1,2]])
 # print(previsoes)
-
