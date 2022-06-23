@@ -23,8 +23,7 @@ Atualização dos pesos = taxa de aprendizagem * entrada * erro
 def step_function(x):
     if x > 0:
         return 1
-    else:
-        return 0
+    return 0
 
 
 #!DUAS CAMADAS
@@ -104,4 +103,13 @@ def rede_neural_uma_camada(x, y):
 #BIAS
 """
 * é um
+"""
+
+
+
+#resumo função de ativação
+"""
+step function = se x > 0 então 1 , se x < 0 então 0 
+
+signmoid retorna valores entre 0 e 1 geralmente usada para probabilidades
 """
