@@ -161,7 +161,6 @@ def exp(x):
 #exemplo de classificação binaria usando redes neurais
 #classfica se um tumor é benigno ou maligno
 
-import keras
 from sklearn.model_selection import train_test_split
 import pandas as pd
 
@@ -172,3 +171,33 @@ with open('dataDL/saidas_breast.csv', 'r') as f:
     classes = pd.read_csv(f)
 
 variaveis_previsoras_treinamento, variaveis_previsoras_teste, classes_treinamento, classes_teste = train_test_split(variaveis_previsoras, classes, test_size=0.3, random_state=0)
+
+from keras.models import Sequential;
+from keras.layers import Dense;
+from ann_visualizer.visualize import ann_viz;#camadas densas são camdas em que cada neurônio é conectado a todos os outros da proxima camada
+
+rede_neural = Sequential()
+rede_neural.add(Dense(units=16, activation='relu', kernel_initializer='random_uniform', input_dim = 30 )) #primeira camada oculta 
+#numero de neuronios = n_de entradas + saidas / 2
+#activation = função de ativação
+#kernel_initializer = inicialização dos pesos
+#input_dim = numero de entradas (numero d colunas dos dados previsores)
+print(variaveis_previsoras_treinamento.shape)#Numero de entradas = numero d colunas
+#Numero de saidas = numero d possiveis classes
+
+
+#camada de saida
+rede_neural.add(Dense(units=1, activation='adam', kernel_initializer='random_uniform'))
+
+#compila a rede neural
+rede_neural.compile(optimizer='adam', loss='binary_crossentropy', metrics=['binary_accuracy'])
+#optimizer = algoritmo de ajuste de pesos
+#loss = função de perda
+#metrics = funções de medida de desempenho (se as classes são binárias, usar binary_accuracy)
+
+rede_neural.fit(variaveis_previsoras_treinamento, classes_treinamento, epochs=100, batch_size=10)
+#epochs = numero de vezes q vc vai frz o ajuste de pesos
+#batch_size = 10 sgnifica que ele vai caucular o erro de 10 registros
+
+#teste da rede neural
+previsoes = rede_neural.predict(variaveis_previsoras_teste)
