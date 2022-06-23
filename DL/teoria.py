@@ -14,4 +14,6 @@ se for ela retorna 1, se não 0
 
 a parte da função soma e a função de ativaçãop representa 1 neuronio
 
+Atualização dos pesos = taxa de aprendizagem * entrada * erro
+
 """
