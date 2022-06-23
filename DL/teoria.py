@@ -212,7 +212,3 @@ previsoes = (previsoes > 0.5)#converte os valores pra true ou false
 #mostra os pesos 
 #print(rede_neural.get_weights())
 
-import visualkeras
-
-#grafico da rede neural
-visualkeras.plot_model(rede_neural, to_file='modelo_breast.png')
