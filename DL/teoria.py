@@ -205,9 +205,14 @@ previsoes = rede_neural.predict(variaveis_previsoras_teste)
 previsoes = (previsoes > 0.5)#converte os valores pra true ou false
 
 
-grafico_rede_neural = ann_viz(rede_neural, title="Rede Neural", view=True)
+# grafico_rede_neural = ann_viz(rede_neural, title="Rede Neural", view=False)
 #pip install graphviz
-#https://convertio.co/pt/gv-png/
+#https://convertio.co/pt/gv-png/ ele cria um arquivo .gv q vc precisa converter pra .png
 
 #mostra os pesos 
-print(rede_neural.get_weights())
+#print(rede_neural.get_weights())
+
+import visualkeras
+
+#grafico da rede neural
+visualkeras.plot_model(rede_neural, to_file='modelo_breast.png')
