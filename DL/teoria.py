@@ -1,6 +1,7 @@
 import math
 #pesos são inicializados com aleatoriamente
 
+
 #!UMA CAMADA
 """
 1 peso\
@@ -102,14 +103,69 @@ def rede_neural_uma_camada(x, y):
     
 #BIAS
 """
-* é um
+*  é um valor que soma ao final que serve para calibrar o valor fina
 """
 
+#LOSS
+"""
+Loss é perda, é o erro que seu modelo comete ao executar a a transformação 
+se o valor esperado é 3 e a rede respondeu 1, o erro é 2
 
+o tipo de método q ele usa pra calcular o erro pode ser configurado 
+"""
+
+#TAXA DE APRENDIZAGEM
+"""
+-Maior taxa de aprendizado = Maior "passo" em direção ao erro minimo local 
+(com sorte o global tb) porém maior ruido, dificuldade de convergencia e 
+podendo até mesmo divergir em alguns casos.
+
+-Menor taxa de aprendizado = Menor "passo" em direção ao erro minimo local 
+(mais dificilmente atinge o global) porém o aprendizado é mais estavel, 
+demora mais e se existir algum ponto de convergencia o gradiente vai aproximar de 
+forma mais "direta" (lembrando que mais devagar também)
+
+
+altos se usam no inicio do aprendizado, baixos se usam no momento que voce quer refinar o aprendizado
+ruido é como se fosse um chiado na voz gravada de uma pessoa
+quanto maior o ruido, menos vc entende a voz
+
+"""
 
 #resumo função de ativação
 """
 step function = se x > 0 então 1 , se x < 0 então 0 
 
 signmoid retorna valores entre 0 e 1 geralmente usada para probabilidades
+
+tanh retorna valores negativos e positivos
+
+softmax serve para quando vc tem mais de 2 classes, retorna a probabilidade de cada classe
+
+relu retorna valores entre 0 e infinito e é muito usada em redes neurais convolucionais
 """
+
+def tanh(x):
+    return (math.exp(x) - math.exp(-x)) / (math.exp(x) + math.exp(-x))
+
+def softmax(x):
+    return math.exp(x) / sum(math.exp(x))
+
+
+def exp(x):
+    return math.e ** x
+
+
+
+
+#exemplo de classificação binaria usando redes neurais
+#classfica se um tumor é benigno ou maligno
+
+import keras
+import pandas as pd
+
+with open('dataDL/entradas_breast.csv', 'r') as f:
+    variaveis_previsoras = pd.read_csv(f)
+
+with open('dataDL/saidas_breast.csv', 'r') as f:
+    classes = pd.read_csv(f)
