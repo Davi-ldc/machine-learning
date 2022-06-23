@@ -162,6 +162,7 @@ def exp(x):
 #classfica se um tumor é benigno ou maligno
 
 import keras
+from sklearn.model_selection import train_test_split
 import pandas as pd
 
 with open('dataDL/entradas_breast.csv', 'r') as f:
@@ -169,3 +170,5 @@ with open('dataDL/entradas_breast.csv', 'r') as f:
 
 with open('dataDL/saidas_breast.csv', 'r') as f:
     classes = pd.read_csv(f)
+
+variaveis_previsoras_treinamento, variaveis_previsoras_teste, classes_treinamento, classes_teste = train_test_split(variaveis_previsoras, classes, test_size=0.3, random_state=0)
