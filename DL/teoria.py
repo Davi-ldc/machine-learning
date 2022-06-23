@@ -187,7 +187,7 @@ print(variaveis_previsoras_treinamento.shape)#Numero de entradas = numero d colu
 
 
 #camada de saida
-rede_neural.add(Dense(units=1, activation='adam', kernel_initializer='random_uniform'))
+rede_neural.add(Dense(units=1, activation='sigmoid'))
 
 #compila a rede neural
 rede_neural.compile(optimizer='adam', loss='binary_crossentropy', metrics=['binary_accuracy'])
@@ -201,3 +201,11 @@ rede_neural.fit(variaveis_previsoras_treinamento, classes_treinamento, epochs=10
 
 #teste da rede neural
 previsoes = rede_neural.predict(variaveis_previsoras_teste)
+#vai retornar a probabilidade de cada classe
+previsoes = (previsoes > 0.5)#converte os valores pra true ou false
+
+
+
+grafico_rede_neural = ann_viz(rede_neural, title="Rede Neural")
+grafico_rede_neural.view()
+ 
