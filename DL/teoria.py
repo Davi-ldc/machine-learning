@@ -205,6 +205,11 @@ previsoes = rede_neural.predict(variaveis_previsoras_teste)
 previsoes = (previsoes > 0.5)#converte os valores pra true ou false
 
 
+
+
+resultado = rede_neural.evaluate(variaveis_previsoras_teste, classes_teste)
+
+
 # grafico_rede_neural = ann_viz(rede_neural, title="Rede Neural", view=False)
 #pip install graphviz
 #https://convertio.co/pt/gv-png/ ele cria um arquivo .gv q vc precisa converter pra .png
@@ -212,6 +217,10 @@ previsoes = (previsoes > 0.5)#converte os valores pra true ou false
 #mostra os pesos 
 #print(rede_neural.get_weights())
 
-from keras.utils.vis_utils import plot_model
+from sklearn.metrics import confusion_matrix, accuracy_score
+pontuação = accuracy_score(classes_teste, previsoes)
+print(pontuação)
+matrix = confusion_matrix(classes_teste, previsoes)
+print(matrix)
 
-plot_model(rede_neural, to_file='modelo_breast.png', show_shapes=True, show_layer_names=True)
+
