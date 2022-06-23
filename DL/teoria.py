@@ -205,7 +205,9 @@ previsoes = rede_neural.predict(variaveis_previsoras_teste)
 previsoes = (previsoes > 0.5)#converte os valores pra true ou false
 
 
+grafico_rede_neural = ann_viz(rede_neural, title="Rede Neural", view=True)
+#pip install graphviz
+#https://convertio.co/pt/gv-png/
 
-grafico_rede_neural = ann_viz(rede_neural, title="Rede Neural")
-grafico_rede_neural.view()
- 
+#mostra os pesos 
+print(rede_neural.get_weights())
