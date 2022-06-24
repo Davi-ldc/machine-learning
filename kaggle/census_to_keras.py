@@ -27,7 +27,7 @@ classes = classes.astype(float)
 variaveis_previsoras_treino, variaveis_previsoras_teste, classes_treino, classes_teste = train_test_split(variaveis_previsoras, classes, test_size=0.3, random_state=0)
 
 
- 
+import keras.optimizers
 from keras.models import Sequential
 from keras.layers import Dense
 
@@ -38,13 +38,13 @@ rd.add(Dense(units=16, activation='relu'))
 #camada de saida
 rd.add(Dense(units=1, activation='sigmoid'))
 
-
-rd.compile(optimizer='adam', loss='binary_crossentropy', metrics=['binary_accuracy'])
+ajuste_dos_pesos = keras.optimizers.adam_v2.Adam(learning_rate=0.001, decay=0.0001, clipvalue=0.5)
+rd.compile(optimizer=ajuste_dos_pesos, loss='binary_crossentropy', metrics=['binary_accuracy'])
 
 print(type(variaveis_previsoras_treino), type(classes_treino))
 print(variaveis_previsoras_treino.shape, classes_treino.shape)
 
-rd.fit(variaveis_previsoras_treino, classes_treino, batch_size=10, epochs=100)
+rd.fit(variaveis_previsoras_treino, classes_treino, batch_size=10, epochs=130)
 
 previsoes = rd.predict(variaveis_previsoras_teste)
 previsoes = (previsoes > 0.5)
