@@ -172,9 +172,10 @@ with open('dataDL/saidas_breast.csv', 'r') as f:
 
 variaveis_previsoras_treinamento, variaveis_previsoras_teste, classes_treinamento, classes_teste = train_test_split(variaveis_previsoras, classes, test_size=0.3, random_state=0)
 
+import keras.optimizers;
 from keras.models import Sequential;
 from keras.layers import Dense;
-from ann_visualizer.visualize import ann_viz;#camadas densas são camdas em que cada neurônio é conectado a todos os outros da proxima camada
+#camadas densas são camdas em que cada neurônio é conectado a todos os outros da proxima camada
 
 rede_neural = Sequential()
 rede_neural.add(Dense(units=16, activation='relu', kernel_initializer='random_uniform', input_dim = 30 )) #primeira camada oculta 
@@ -185,14 +186,24 @@ rede_neural.add(Dense(units=16, activation='relu', kernel_initializer='random_un
 print(variaveis_previsoras_treinamento.shape)#Numero de entradas = numero d colunas
 #Numero de saidas = numero d possiveis classes
 
+#2 camada oculta
+rede_neural.add(Dense(units=16, activation='relu', kernel_initializer='random_uniform'))
 
 #camada de saida
 rede_neural.add(Dense(units=1, activation='sigmoid'))
 
+
+ajuste_dos_pesos = keras.optimizers.adam_v2.Adam(learning_rate=0.001, decay=0.0001, clipvalue=0.5)
+#adam é o que ele usa pra frz o ajuste dos pesos
+#learning_rate é o tamanho do "passo" que ele vai dar procurando o minimo global
+#decay é o tanto que ele vai incrementando os pesos
+#clip value significa que se ele achar um valor maior que 0,5 ele vai congelar o valor
+
+
 #compila a rede neural
-rede_neural.compile(optimizer='adam', loss='binary_crossentropy', metrics=['binary_accuracy'])
+rede_neural.compile(optimizer=ajuste_dos_pesos, loss='binary_crossentropy', metrics=['binary_accuracy'])
 #optimizer = algoritmo de ajuste de pesos
-#loss = função de perda
+#loss = caucula o erro
 #metrics = funções de medida de desempenho (se as classes são binárias, usar binary_accuracy)
 
 rede_neural.fit(variaveis_previsoras_treinamento, classes_treinamento, epochs=100, batch_size=10)
@@ -209,13 +220,11 @@ previsoes = (previsoes > 0.5)#converte os valores pra true ou false
 
 resultado = rede_neural.evaluate(variaveis_previsoras_teste, classes_teste)
 
+peso0 = rede_neural.layers[0].get_weights()
+print(len(peso0))
 
-# grafico_rede_neural = ann_viz(rede_neural, title="Rede Neural", view=False)
-#pip install graphviz
-#https://convertio.co/pt/gv-png/ ele cria um arquivo .gv q vc precisa converter pra .png
 
-#mostra os pesos 
-#print(rede_neural.get_weights())
+ 
 
 from sklearn.metrics import confusion_matrix, accuracy_score
 pontuação = accuracy_score(classes_teste, previsoes)
