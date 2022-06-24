@@ -11,6 +11,7 @@ variaveis_previsoras = data.iloc[:, 0:14].values
 classes = data.iloc[:, 14].values
 
 label = LabelEncoder() 
+label_classes = LabelEncoder()
 for c in range(1, 14): 
     if c == 2 or c == 10 or c == 11 or c == 12: # colunas que ja sao numericas 
         continue 
@@ -18,10 +19,14 @@ for c in range(1, 14):
     
     Q_numero_cada_str_recebeu = dict(zip(label.classes_, label.transform(label.classes_)))
     # print(Q_numero_cada_str_recebeu)
+classes = label_classes.fit_transform(classes)
 
+#converte cada int em float
+variaveis_previsoras = variaveis_previsoras.astype(float)
+classes = classes.astype(float)
 variaveis_previsoras_treino, variaveis_previsoras_teste, classes_treino, classes_teste = train_test_split(variaveis_previsoras, classes, test_size=0.3, random_state=0)
 
- 
+
  
 from keras.models import Sequential
 from keras.layers import Dense
@@ -46,5 +51,5 @@ previsoes = (previsoes > 0.5)
 
 pontuação = accuracy_score(classes_teste, previsoes)
 print(pontuação)
- 
+
  
