@@ -33,8 +33,10 @@ from keras.layers import Dense
 
 rd = Sequential()
 
-rd.add(Dense(units=16, activation='relu', input_dim=14))
-rd.add(Dense(units=16, activation='relu'))
+rd.add(Dense(units=100, activation='relu', input_dim=14))
+rd.add(Dense(units=100, activation='relu'))
+rd.add(Dense(units=100, activation='relu'))
+rd.add(Dense(units=100, activation='relu'))
 #camada de saida
 rd.add(Dense(units=1, activation='sigmoid'))
 
