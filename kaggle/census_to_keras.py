@@ -46,10 +46,10 @@ rd.compile(optimizer=ajuste_dos_pesos, loss='binary_crossentropy', metrics=['bin
 print(type(variaveis_previsoras_treino), type(classes_treino))
 print(variaveis_previsoras_treino.shape, classes_treino.shape)
 
-rd.fit(variaveis_previsoras_treino, classes_treino, batch_size=10, epochs=200)
+rd.fit(variaveis_previsoras_treino, classes_treino, batch_size=10, epochs=30)
 
 previsoes = rd.predict(variaveis_previsoras_teste)
 previsoes = (previsoes > 0.5)
 
 pontuação = accuracy_score(classes_teste, previsoes)
-print(pontuação)
+print(pontuação)#0.7585218548469649
