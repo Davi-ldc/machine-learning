@@ -21,18 +21,30 @@ from sklearn.model_selection import train_test_split
 
 # variaveis_previsoras_treino, variaveis_previsoras_teste, classes_treino, classes_teste = train_test_split(variaveis_previsoras, classes, test_size=0.3, random_state=0)
 
-# #converte pra df
-# pd.DataFrame(variaveis_previsoras_treino).to_csv('dataDL/variaveis_previsoras_treino.csv', index=False)
-# pd.DataFrame(variaveis_previsoras_teste).to_csv('dataDL/variaveis_previsoras_teste.csv', index=False)
-# pd.DataFrame(classes_treino).to_csv('dataDL/classes_treino.csv', index=False)
-# pd.DataFrame(classes_teste).to_csv('dataDL/classes_teste.csv', index=False)
  
  
-#carega os dados
-variaveis_previsoras_treino = pd.read_csv('dataDL/variaveis_previsoras_treino.csv')
-variaveis_previsoras_teste = pd.read_csv('dataDL/variaveis_previsoras_teste.csv')
-classes_treino = pd.read_csv('dataDL/classes_treino.csv')
-classes_teste = pd.read_csv('dataDL/classes_teste.csv')
- 
+from keras.models import Sequential
+from keras.layers import Dense
 
+rd = Sequential()
+
+rd.add(Dense(units=16, activation='relu', input_dim=14))
+rd.add(Dense(units=16, activation='relu'))
+#camada de saida
+rd.add(Dense(units=1, activation='sigmoid'))
+
+
+rd.compile(optimizer='adam', loss='binary_crossentropy', metrics=['binary_accuracy'])
+
+print(type(variaveis_previsoras_treino), type(classes_treino))
+print(variaveis_previsoras_treino.shape, classes_treino.shape)
+
+rd.fit(variaveis_previsoras_treino, classes_treino, batch_size=10, epochs=100)
+
+previsoes = rd.predict(variaveis_previsoras_teste)
+previsoes = (previsoes > 0.5)
+
+pontuação = accuracy_score(classes_teste, previsoes)
+print(pontuação)
+ 
  
