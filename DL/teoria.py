@@ -206,6 +206,7 @@ rede_neural.compile(optimizer=ajuste_dos_pesos, loss='binary_crossentropy', metr
 #loss = caucula o erro
 #metrics = funções de medida de desempenho (se as classes são binárias, usar binary_accuracy)
 
+
 rede_neural.fit(variaveis_previsoras_treinamento, classes_treinamento, epochs=100, batch_size=10)
 #epochs = numero de vezes q vc vai frz o ajuste de pesos
 #batch_size = 10 sgnifica que ele vai caucular o erro de 10 registros
@@ -214,7 +215,6 @@ rede_neural.fit(variaveis_previsoras_treinamento, classes_treinamento, epochs=10
 previsoes = rede_neural.predict(variaveis_previsoras_teste)
 #vai retornar a probabilidade de cada classe
 previsoes = (previsoes > 0.5)#converte os valores pra true ou false
-
 
 
 
@@ -231,5 +231,4 @@ pontuação = accuracy_score(classes_teste, previsoes)
 print(pontuação)
 matrix = confusion_matrix(classes_teste, previsoes)
 print(matrix)
-
 
