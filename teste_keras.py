@@ -44,6 +44,8 @@ rd.add(Dense(units=1, activation='sigmoid'))
 rd.compile(optimizer='adam', loss='binary_crossentropy', metrics=['binary_accuracy'])
 
 print(type(variaveis_previsoras_treino), type(classes_treino))
+print(variaveis_previsoras_treino.shape, classes_treino.shape)
+
 rd.fit(variaveis_previsoras_treino, classes_treino, batch_size=10, epochs=100)
 
 previsoes = rd.predict(variaveis_previsoras_teste)
