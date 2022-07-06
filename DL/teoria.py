@@ -2,6 +2,42 @@ import math
 #pesos são inicializados com aleatoriamente
 
 
+
+
+
+#ONE HOT ENCODING
+"""
+então... problemas mais complexos precisam de preprocessamento mais complexo
+por isso n sugiro usar o label encoder pois ele vai so botar um numero pra cada str
+sendo q pra rede neural n faz sentido
+tipo n faz sentido faxineiro ser 8, presidente ser 3 e lixeiro ser 1
+poderia ser o contrario
+ai olha a idea do one hot encoding
+ao invez d so trocar cada str por um numero ele cria uma coluna pra cada str
+então tipo se os dados previsores são homem e mulher ele cria duas colunas
+uma pra homem outra pra mulher que são representados por 0 e 1 EX:
+
+
+
+Dataframe:
+sexo
+Homem   
+mulher  
+homem   
+
+One Hot Encoder:
+homem mulher  
+1       0
+0       1
+1       0
+
+assim a rede neural vai entender os dados mais facilmente
+"""
+
+
+
+
+
 #!UMA CAMADA
 """
 1 peso\
@@ -132,17 +168,26 @@ quanto maior o ruido, menos vc entende a voz
 
 """
 
-#resumo função de ativação
+#FUNÇÕES DE ATIVAÇÃO
 """
+Funções d ativação servem pra q a rd se adapte a problemas não linearmente separáveis
+(Caso contrário ela ia ter um resultado parecido com regressão linear)
+
+
 step function = se x > 0 então 1 , se x < 0 então 0 
 
-signmoid retorna valores entre 0 e 1 geralmente usada para probabilidades
+sigmoid retorna valores entre 0 e 1 geralmente usada para probabilidades no autput da rede(ultima camada)
 
-tanh retorna valores negativos e positivos
+Softmax = sgmoid so q mlhr, usa ela no final da rede, para que o resultado seja um vetor de probabilidades
 
-softmax serve para quando vc tem mais de 2 classes, retorna a probabilidade de cada classe
+tanh retorna valores negativos e positivos e é um concorente de relu
 
 relu retorna valores entre 0 e infinito e é muito usada em redes neurais convolucionais
+
+no geral faz assim
+camadas ocultas -> relu
+camada de saida -> softmax
+ajuste dos pesos -> adam
 """
 
 def tanh(x):
@@ -190,7 +235,7 @@ print(variaveis_previsoras_treinamento.shape)#Numero de entradas = numero d colu
 rede_neural.add(Dense(units=16, activation='relu', kernel_initializer='random_uniform'))
 
 #camada de saida
-rede_neural.add(Dense(units=1, activation='sigmoid'))
+rede_neural.add(Dense(units=1, activation='Softmax'))
 
 
 ajuste_dos_pesos = keras.optimizers.adam_v2.Adam(learning_rate=0.001, decay=0.0001, clipvalue=0.5)
