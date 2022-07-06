@@ -67,3 +67,4 @@ classificador.fit(previsores, classe, batch_size = 10, epochs = 500, callbacks =
 #teste da rede neural
 erro, pontuação = classificador.evaluate(previsores, classe)
 print(erro, pontuação)
+#0.14205321669578552 0.9543058276176453
