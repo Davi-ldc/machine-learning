@@ -16,7 +16,7 @@ classe = pd.read_csv('dataDL/saidas_breast.csv')
 classificador = Sequential()
 
 
-classificador.add(Dense(units = 16, activation = 'relu', 
+classificador.add(Dense(units = 32, activation = 'relu', 
                         kernel_initializer = 'glorot_uniform', input_dim = 30))
 #numero de neuronios = n_de entradas + saidas / 2
 #activation = função de ativação
@@ -29,8 +29,11 @@ classificador.add(Dropout(0.2))
 #serve pra evitar overfitting
 #20% dos neuronios da camada acima serão removidos aleatoriamente
 
-classificador.add(Dense(units = 16, activation = 'relu', 
+classificador.add(Dense(units = 32, activation = 'relu', 
                         kernel_initializer = 'glorot_uniform'))
+classificador.add(Dropout(0.2))
+
+classificador.add(Dense(units = 32, activation = 'relu'))
 classificador.add(Dropout(0.2))
 
 #camada de saida
