@@ -17,7 +17,7 @@ classificador = Sequential()
 
 
 classificador.add(Dense(units = 16, activation = 'relu', 
-                        kernel_initializer = 'random_uniform', input_dim = 30))
+                        kernel_initializer = 'glorot_uniform', input_dim = 30))
 #numero de neuronios = n_de entradas + saidas / 2
 #activation = função de ativação
 #kernel_initializer = inicialização dos pesos
@@ -30,7 +30,7 @@ classificador.add(Dropout(0.2))
 #20% dos neuronios da camada acima serão removidos aleatoriamente
 
 classificador.add(Dense(units = 16, activation = 'relu', 
-                        kernel_initializer = 'random_uniform'))
+                        kernel_initializer = 'glorot_uniform'))
 classificador.add(Dropout(0.2))
 
 #camada de saida
@@ -56,7 +56,7 @@ tensorboard = TensorBoard(log_dir='logs/teoria_redes_neurais')
 # e digitar tensorboard --logdir logs/teoria_redes_neurais
 
 
-classificador.fit(previsores, classe, batch_size = 10, epochs = 100, callbacks = [tensorboard])
+classificador.fit(previsores, classe, batch_size = 10, epochs = 500, callbacks = [tensorboard])
 #epochs = numero de vezes q vc vai frz o ajuste de pesos
 #batch_size = 10 sgnifica que ele vai caucular o erro de 10 registros
 
