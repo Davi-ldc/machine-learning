@@ -18,7 +18,7 @@ def criarRede():
                         kernel_initializer = 'random_uniform'))
     classificador.add(Dropout(0.2))
     classificador.add(Dense(units = 1, activation = 'sigmoid'))
-    otimizador = keras.optimizers.Adam(lr = 0.001, decay = 0.0001, clipvalue = 0.5)
+    otimizador = keras.optimizers.adam_v2.Adam(learning_rate=0.001, decay=0.0001, clipvalue=0.5)
     classificador.compile(optimizer = otimizador, loss = 'binary_crossentropy',
                       metrics = ['binary_accuracy'])
     return classificador
@@ -27,11 +27,11 @@ classificador = KerasClassifier(build_fn = criarRede,
                                 epochs = 100,
                                 batch_size = 10)
 
-# resultados = cross_val_score(estimator = classificador,
-#                              X = previsores, y = classe,
-#                              cv = 10, scoring = 'accuracy')
-# media = resultados.mean()
-# desvio = resultados.std()
+resultados = cross_val_score(estimator = classificador,
+                             X = previsores, y = classe,
+                             cv = 10, scoring = 'accuracy')
+media = resultados.mean()
+desvio = resultados.std()
 
 
 
