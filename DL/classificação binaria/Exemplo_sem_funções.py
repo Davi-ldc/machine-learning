@@ -59,7 +59,7 @@ tensorboard = TensorBoard(log_dir='logs/teoria_redes_neurais')
 # e digitar tensorboard --logdir logs/teoria_redes_neurais
 
 
-classificador.fit(previsores, classe, batch_size = 10, epochs = 500, callbacks = [tensorboard])
+classificador.fit(previsores, classe, batch_size = 10, epochs = 1000, callbacks = [tensorboard])
 #epochs = numero de vezes q vc vai frz o ajuste de pesos
 #batch_size = 10 sgnifica que ele vai caucular o erro de 10 registros
 
