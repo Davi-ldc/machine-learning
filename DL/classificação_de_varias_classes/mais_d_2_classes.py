@@ -1,4 +1,3 @@
-from tkinter import Y
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
@@ -58,6 +57,9 @@ print(f"Erro: {erro}  Acuracia: {acuracia}")
 
 
 print([x for x in rede_neural.predict([[5.7,3.0,4.2,1.2]])])
+
+
+
 
 
 

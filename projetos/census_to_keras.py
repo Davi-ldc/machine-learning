@@ -34,13 +34,10 @@ rede_neural.add(Dense(units=100, activation='relu', input_dim=variaveis_previsor
 rede_neural.add(Dense(units=100, activation='relu'))
 rede_neural.add(Dense(units=100, activation='relu'))
 
-rede_neural.add(Dense(units=2, activation='softmax'))
+rede_neural.add(Dense(units=2, activation='signmoid'))
 
 rede_neural.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
  
 rede_neural.fit(variaveis_previsoras_treinamento, classes_treinamento, epochs=100, batch_size=100)
 
-previzões = rede_neural.predict(variaveis_previsoras_teste)
-
-pontuação = accuracy_score(classes_teste, previzões)	
-print(pontuação)
+erro, acuracia = rede_neural.evaluate(variaveis_previsoras_teste, classes_teste)
