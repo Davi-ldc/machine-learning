@@ -1,3 +1,4 @@
+from tkinter import Y
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
@@ -34,8 +35,8 @@ print(variaveis_previsoras_train.shape)
 
 rede_neural = Sequential()
 
-rede_neural.add(Dense(4, activation='relu', input_dim=4))
-rede_neural.add(Dense(4, activation='relu'))
+rede_neural.add(Dense(30, activation='relu', input_dim=4))
+rede_neural.add(Dense(30, activation='relu'))
 
 #camada d saida
 rede_neural.add(Dense(3, activation='softmax'))
@@ -44,12 +45,19 @@ rede_neural.add(Dense(3, activation='softmax'))
 
 rede_neural.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
-tensorboard = TensorBoard(log_dir='logs/graficos')
 
-rede_neural.fit(variaveis_previsoras_train, classe_train, batch_size=10, epochs=1000, callbacks=[tensorboard])
+#tensorboard
+tensorboard = TensorBoard(log_dir='logs/graficos', write_images=True)
+
+rede_neural.fit(variaveis_previsoras_train, classe_train, batch_size=150, epochs=1000, callbacks=[tensorboard])
 #dps roda 
 # tensorboard --logdir logs/graficos
-
 erro, acuracia = rede_neural.evaluate(variaveis_previsoras_test, classe_test)
 
-print(erro, acuracia)
+print(f"Erro: {erro}  Acuracia: {acuracia}")
+
+
+print([x for x in rede_neural.predict([[5.7,3.0,4.2,1.2]])])
+
+
+
