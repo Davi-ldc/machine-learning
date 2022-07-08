@@ -1,43 +1,56 @@
-import pandas as pd
-import numpy as np
-from sklearn.preprocessing import OneHotEncoder, LabelEncoder
-from sklearn.metrics import accuracy_score
-from sklearn.model_selection import train_test_split
+# import pandas as pd
+# import numpy as np
+# from sklearn.preprocessing import OneHotEncoder, LabelEncoder
+# from sklearn.metrics import accuracy_score
+# from sklearn.model_selection import train_test_split
 
 
-with open('data/census.csv') as f:
-    data = pd.read_csv(f)
+# with open('data/census.csv') as f:
+#     data = pd.read_csv(f)
     
-variaveis_previsoras = data.iloc[:, 0:14].values
-classes = data.iloc[:, 14].values
-
-label_previsores = LabelEncoder()
-label_classes = LabelEncoder()
-
-variaveis_previsoras = label_previsores.fit_transform(variaveis_previsoras)
-classes = label_classes.fit_transform(classes)
+# variaveis_previsoras = data.iloc[:, 0:14].values
+# classes = data.iloc[:, 14].values
 
 
-variaveis_previsoras_treinamento, variaveis_previsoras_teste, classes_treinamento, classes_teste = train_test_split(variaveis_previsoras, classes, test_size=0.3, random_state=0)
+# onehotencoder = OneHotEncoder()
+# variaveis_previsoras = onehotencoder.fit_transform(variaveis_previsoras).toarray()
+
+# print(variaveis_previsoras.shape)
+# print(variaveis_previsoras)
+# label = LabelEncoder()
+# classes = label.fit_transform(classes)
 
 
-import keras.callbacks
-from keras.models import Sequential
-from keras.layers import Dense
+# variaveis_previsoras_treinamento, variaveis_previsoras_teste, classes_treinamento, classes_teste = train_test_split(variaveis_previsoras, classes, test_size=0.3, random_state=0)
 
 
-rede_neural = Sequential()
+# import keras.callbacks
+# from keras.models import Sequential
+# from keras.layers import Dense, Dropout
+# from keras.callbacks import TensorBoard
 
-print(variaveis_previsoras_treinamento.shape)
+# rede_neural = Sequential()
 
-rede_neural.add(Dense(units=100, activation='relu', input_dim=variaveis_previsoras_treinamento.shape[1]))
-rede_neural.add(Dense(units=100, activation='relu'))
-rede_neural.add(Dense(units=100, activation='relu'))
+# print(variaveis_previsoras_treinamento.shape)
 
-rede_neural.add(Dense(units=2, activation='signmoid'))
+# rede_neural.add(Dense(units=100, activation='relu', input_dim=13))
+# rede_neural.add(Dropout(0.2))
+# rede_neural.add(Dense(units=100, activation='relu'))
+# rede_neural.add(Dropout(0.2))
+# rede_neural.add(Dense(units=100, activation='relu'))
+# rede_neural.add(Dropout(0.2))
 
-rede_neural.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+# rede_neural.add(Dense(units=1, activation='sigmoid'))
+
+# rede_neural.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
  
-rede_neural.fit(variaveis_previsoras_treinamento, classes_treinamento, epochs=100, batch_size=100)
+# #tensorboard
+# tensorboard = TensorBoard(log_dir='logs/graficos', write_images=True)
 
-erro, acuracia = rede_neural.evaluate(variaveis_previsoras_teste, classes_teste)
+
+
+# rede_neural.fit(variaveis_previsoras_treinamento, classes_treinamento, epochs=100, batch_size=10, callbacks=[tensorboard])
+
+# erro, acuracia = rede_neural.evaluate(variaveis_previsoras_teste, classes_teste)
+# print(erro, acuracia)
+

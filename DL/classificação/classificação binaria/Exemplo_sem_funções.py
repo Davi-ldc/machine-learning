@@ -68,3 +68,12 @@ classificador.fit(previsores, classe, batch_size = 10, epochs = 1000, callbacks 
 erro, pontuação = classificador.evaluate(previsores, classe)
 print(erro, pontuação)
 #0.14205321669578552 0.9543058276176453
+
+#salva o modelo
+classificador.save('classificador_breast.h5')
+
+import visualkeras
+visualkeras.layered_view(classificador).show()
+
+import netron
+netron.start('classificador_breast.h5')
