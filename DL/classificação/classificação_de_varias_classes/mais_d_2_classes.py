@@ -1,10 +1,12 @@
 import pandas as pd
+import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
 from keras.models import Sequential
 from keras.layers import Dense
 from keras.callbacks import TensorBoard
 from keras.utils import np_utils
+
 
 
 data = pd.read_csv('dataDL/iris.csv')
@@ -70,7 +72,7 @@ print(f"Erro: {erro}  Acuracia: {acuracia}")
 
 #preve 1 registro e mostra a classe
 #6.6,2.9,4.6,1.3 (classe = Iris-versicolor)
-previsao = rede_neural.predict(6.6,2.9,4.6,1.3)
-print(previsao.argmax())
+previsao = rede_neural.predict([[6.6,2.9,4.6,1.3]])
+print(np.argmax(previsao, axis=1))
 
 print(previsao)

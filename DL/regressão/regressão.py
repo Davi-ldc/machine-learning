@@ -29,20 +29,10 @@ variaveis_previsoras = data.iloc[:, 1:13].values
 classe = data.iloc[:, 0].values
 
 
+from sklearn.compose import ColumnTransformer
+onehotencoder = ColumnTransformer(transformers=[("OneHot", OneHotEncoder(), [0,1,3,5,8,9,10])],remainder='passthrough')
+variaveis_previsoras = onehotencoder.fit_transform(variaveis_previsoras)
 
-encoder = OneHotEncoder()
-variaveis_previsoras = encoder.fit_transform(variaveis_previsoras)
-
-#ideia
-"""
-variaveis_previsoras = pd.DataFrame(variaveis_previsoras)
-dados_sequenciais = variaveis_previsoras.drop([0,1,3,5,8,9,10])
-variaveis_previsoras = variaveis_previsoras.drop([0,1,3,5,8,9,10])
-variaveis_previsoras = encoder.fit_transform(variaveis_previsoras)
-variaveis_previsoras = pd.DataFrame(variaveis_previsoras)
-variaveis_previsoras = pd.concat([dados_sequenciais, variaveis_previsoras])
-"""
-print(variaveis_previsoras.shape)
 
 from keras.models import Sequential
 from keras.layers import Dense, Dropout
@@ -84,4 +74,4 @@ Root mean squared error = raiz quadrada do mean squared error
 """
 
 tensorboard = TensorBoard(log_dir = 'logs/regressao')
-rede_neural.fit(variaveis_previsoras, classe, epochs = 100, batch_size = 10, callbacks = [tensorboard])
+rede_neural.fit(variaveis_previsoras, classe, epochs = 100, batch_size = 1000, callbacks = [tensorboard])
