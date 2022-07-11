@@ -28,10 +28,16 @@ variaveis_previsoras = data.iloc[:, 1:13].values
 classe = data.iloc[:, 0].values
 
 
-encoder = OneHotEncoder(categorical_features = [0,1,3,5,8,9,10])
 #dados sequenciais não serão passados para o OneHotEncoder
-variaveis_previsoras = encoder.fit_transform(variaveis_previsoras).toarray()
-print(variaveis_previsoras.shape)#
+encoder = OneHotEncoder()
+for c in range(0, 11):
+    if c in [0,1,3,5,8,9,10]: # colunas sequenciais
+        variaveis_previsoras[:, c] = encoder.fit_transform(variaveis_previsoras[:, c].reshape(-1, 1))
+
+
+
+
+print(variaveis_previsoras.shape)
 
 from keras.models import Sequential
 from keras.layers import Dense, Dropout
@@ -39,3 +45,34 @@ from keras.layers import Dense, Dropout
 rede_neural = Sequential() 
 
 rede_neural.add(Dense(units = 200, activation = 'relu', input_dim = 316))
+rede_neural.add(Dropout(0.2))
+rede_neural.add(Dense(units = 200, activation = 'relu'))
+rede_neural.add(Dropout(0.2))
+rede_neural.add(Dense(units = 1, activation = 'linear'))
+#a unica coisa q muda é a função de ativação
+#linear retorna um numero
+
+rede_neural.compile(loss = 'mean_absolute_error', optimizer = 'adam', metrics = ['mean_absolute_error'])
+#os valoreses possiveis d loss estão na pasta ML
+"""
+formula 1:
+                            n
+Mean absolute error = 1/n * ∑|yi - yi'|
+                            i=1
+*diferença absoluta entre as previsões e os valores reais
+
+
+formula 2:
+                            n
+mean squared error = 1/n * ∑(yi - yi')²
+                            i=1
+                            
+*diferenças ao quadrado
+
+
+formula 3:
+
+Root mean squared error = raiz quadrada do mean squared error
+
+*intrerpetação facilitada
+"""
