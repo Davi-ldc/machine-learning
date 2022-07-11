@@ -54,7 +54,7 @@ rede_neural.add(Dense(units = 1, activation = 'linear'))
 #a unica coisa q muda é a função de ativação
 #linear retorna um numero
 
-rede_neural.compile(loss = 'mean_absolute_error', optimizer = 'adam', metrics = ['mean_absolute_error'])
+rede_neural.compile(loss = 'mean_absolute_error', optimizer = 'adam', metrics = ['mean_absolute_error', 'mean_squared_error'])
 #os valoreses possiveis d loss estão na pasta ML
 """
 formula 1:
@@ -80,6 +80,7 @@ Root mean squared error = raiz quadrada do mean squared error
 """
 
 tensorboard = TensorBoard(log_dir = 'logs/regressao')
+#dps roda tensorboard --logdir logs/regressao
 rede_neural.fit(variaveis_previsoras_treinamento, classe_treinamento, epochs = 100, batch_size = 1000, callbacks = [tensorboard])
 
 erro, previsao = rede_neural.evaluate(variaveis_previsoras_teste, classe_teste)
