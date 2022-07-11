@@ -2,7 +2,7 @@
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import OneHotEncoder
-
+from sklearn.model_selection import train_test_split
 
 
 
@@ -29,9 +29,13 @@ variaveis_previsoras = data.iloc[:, 1:13].values
 classe = data.iloc[:, 0].values
 
 
+variaveis_previsoras_treinamento, variaveis_previsoras_teste, classe_treinamento, classe_teste = train_test_split(variaveis_previsoras, classe, test_size=0.3, random_state=0)
+
+
 from sklearn.compose import ColumnTransformer
 onehotencoder = ColumnTransformer(transformers=[("OneHot", OneHotEncoder(), [0,1,3,5,8,9,10])],remainder='passthrough')
-variaveis_previsoras = onehotencoder.fit_transform(variaveis_previsoras)
+variaveis_previsoras_treinamento = onehotencoder.fit_transform(variaveis_previsoras_treinamento)
+variaveis_previsoras_teste = onehotencoder.transform(variaveis_previsoras_teste)
 
 
 from keras.models import Sequential
@@ -41,6 +45,8 @@ from keras.callbacks import TensorBoard
 rede_neural = Sequential() 
 
 rede_neural.add(Dense(units = 200, activation = 'relu', input_dim = 316))
+rede_neural.add(Dropout(0.2))
+rede_neural.add(Dense(units = 200, activation = 'relu'))
 rede_neural.add(Dropout(0.2))
 rede_neural.add(Dense(units = 200, activation = 'relu'))
 rede_neural.add(Dropout(0.2))
@@ -74,4 +80,6 @@ Root mean squared error = raiz quadrada do mean squared error
 """
 
 tensorboard = TensorBoard(log_dir = 'logs/regressao')
-rede_neural.fit(variaveis_previsoras, classe, epochs = 100, batch_size = 1000, callbacks = [tensorboard])
+rede_neural.fit(variaveis_previsoras_treinamento, classe_treinamento, epochs = 100, batch_size = 1000, callbacks = [tensorboard])
+
+erro, previsao = rede_neural.evaluate(variaveis_previsoras_teste, classe_teste)
