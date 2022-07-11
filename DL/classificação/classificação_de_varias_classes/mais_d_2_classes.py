@@ -56,12 +56,12 @@ erro, acuracia = rede_neural.evaluate(variaveis_previsoras_test, classe_test)
 print(f"Erro: {erro}  Acuracia: {acuracia}")
 
 #salva o modelo
-rede_neural.save('modelo_iris.h5')
+# rede_neural.save('modelo_iris.h5')
 
-#carrega o modelo
-from keras.models import load_model
+# #carrega o modelo
+# from keras.models import load_model
 
-rede_neural_carregada = load_model('modelo_iris.h5')
+# rede_neural_carregada = load_model('modelo_iris.h5')
 
 # erro, acuracia = rede_neural_carregada.evaluate(variaveis_previsoras_test, classe_test)
 
@@ -71,5 +71,6 @@ rede_neural_carregada = load_model('modelo_iris.h5')
 #preve 1 registro e mostra a classe
 #6.6,2.9,4.6,1.3 (classe = Iris-versicolor)
 previsao = rede_neural.predict(6.6,2.9,4.6,1.3)
+print(previsao.argmax())
 
 print(previsao)
