@@ -74,6 +74,7 @@ print(erro, pontuação)
 
 previsão = classificador.predict([[20.29,14.34,135.1,1297,0.1003,0.1328,198,0.1043,0.1809,0.05883,0.7572,0.7813,5438,94.44,0.01149,0.02461,0.05688,0.01885,0.01756,0.005115,22.54,16.67,152.2,1575,0.1374,205,0.4,0.1625,0.2364,0.07678]])
 print(numpy.argmax(previsão, axis = 1))
+
 # #salva o modelo
 # classificador.save('classificador_breast.h5')
 

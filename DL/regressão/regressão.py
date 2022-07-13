@@ -53,9 +53,12 @@ rede_neural.add(Dropout(0.2))
 rede_neural.add(Dense(units = 1, activation = 'linear'))
 #a unica coisa q muda é a função de ativação
 #linear retorna um numero
+#lembra q função d ativação tira a linearidade, então linear basicamente n faz nd, ela só deixa os daodos passar
+#por isso q o nome é linear
 
 rede_neural.compile(loss = 'mean_absolute_error', optimizer = 'adam', metrics = ['mean_absolute_error', 'mean_squared_error'])
 #os valoreses possiveis d loss estão na pasta ML
+#sugiro usar mean_squared_error pq ele penaliza mais respostas erradas
 """
 formula 1:
                             n

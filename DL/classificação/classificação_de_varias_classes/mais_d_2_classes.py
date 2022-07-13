@@ -72,7 +72,7 @@ print(f"Erro: {erro}  Acuracia: {acuracia}")
 
 #preve 1 registro e mostra a classe
 #6.6,2.9,4.6,1.3 (classe = Iris-versicolor)
-previsao = rede_neural.predict([[6.6,2.9,4.6,1.3]])
-print(np.argmax(previsao, axis=1))
+print(label.inverse_transform(np.argmax(rede_neural.predict([[6.6,2.9,4.6,1.3]]), axis=1)))
 
-print(previsao)
+print(rede_neural.predict([[5.0,3.4,1.5,0.2]]))
+print(np.argmax(rede_neural.predict([[5.0,3.4,1.5,0.2]]), axis=1))
