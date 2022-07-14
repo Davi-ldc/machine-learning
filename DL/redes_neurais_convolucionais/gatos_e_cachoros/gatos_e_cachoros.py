@@ -20,8 +20,9 @@ previsores_treinamento = X_treinamento.reshape(X_treinamento.shape[0],
 previsores_teste = X_teste.reshape(X_teste.shape[0], 28, 28, 1)
 #obs o nome das variaveis tenq ser diferente pq se não ao invez d virar 28 28 1 fica (valor q ja tava antes), 28, 28 ,1 oq da erro
 
-# previsores_treinamento = previsores_treinamento.astype('float32')
-# previsores_teste = previsores_teste.astype('float32')
+previsores_treinamento = previsores_treinamento.astype('float32')
+previsores_teste = previsores_teste.astype('float32')
+#eu fiz isso pq o np_utils.to_categorical n aceita int8 (valor antigo dos dados)
 
 
 previsores_treinamento /= 255
