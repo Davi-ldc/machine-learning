@@ -51,10 +51,18 @@ qunato maior o valor dentro da matrix gerada pelo operação de convolução mai
 #pooling
 """
 reduz ainda mais a imagem(reduz o overfitting e ruidos desnecessarios)
+pega uma are d 2x2 do resultado do operador d convolução e deixa somente o maior valor
+multiplica a imagem pelo detector d caracteristicas q é atualizado a cada interação da rede neural junto com os pesos
+da rede neural densa
 """
 
 #flattening
 """
 pega o resultado do pooling e transforma em um vetor que será passado para uma rede neural densa
 
+"""
+
+#rede neural densa
+"""
+só cria rede neural, usa relu dps softmax se for mais d 2 classes se n usa softmax
 """
