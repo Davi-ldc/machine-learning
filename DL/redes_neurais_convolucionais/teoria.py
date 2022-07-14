@@ -1,7 +1,9 @@
+#https://www.cs.cmu.edu/~aharley/vis/conv/flat.html
 #redes neurais convolucionais ou CNN servem  pra Visão computacional
 #não usa todas as entradas (piexels) pois é MT pixel e tem pc q aguente olhar 8 k d pixels pra classificar uma imagem em 8k
 #tenta achar as caracteristicas mais importantes 
 #vai selecionar somenta as melhores caracteristicas de forma que não seja necessário
+#durante o treinamento descobre qual é o melhor detector de caracteristicas(usado ono operador de convolução)
 #OLHAR TODOS OS PIXELS
 
 
@@ -17,8 +19,14 @@ e tem esse link tmb: https://en.wikipedia.org/wiki/Convolution
 """
 
 #conseito humanamente compressível:
-"""
 
+"""
+pega 8k x 3 d pixels extrais as caracteristicas de cada classe e passa dados especificos pras camdas ocultas
+exemplo:
+vc tem uma imagem d 32 x 32 pixels e vc quer descobrir qual o numero escrito na imagem, suponda q ela tena o formato
+quadrado vc n vai precisar d tds os pixels, geralmente são usados das bprdas pra dentro, pq tipo vc n precisa
+do cenario pra reconhecer a logo do google só da borda pra dentro 
+Durante o treinamneto ela descobre qual é o melhor jeito d reduzir a imagem
 """
 
 
@@ -34,7 +42,19 @@ e tem esse link tmb: https://en.wikipedia.org/wiki/Convolution
 
 
 
-#Operador de convolução
+#operação de convolução
 """
+vc vai pegar os dados mandar eles prum kernel q vai modificar a imagem (reduzir a dimensinalidade da imagem)
+qunato maior o valor dentro da matrix gerada pelo operação de convolução mais importante ele é
+"""
+
+#pooling
+"""
+reduz ainda mais a imagem(reduz o overfitting e ruidos desnecessarios)
+"""
+
+#flattening
+"""
+pega o resultado do pooling e transforma em um vetor que será passado para uma rede neural densa
 
 """
