@@ -12,12 +12,13 @@ from keras.layers.normalization.batch_normalization import BatchNormalization
 # plt.imshow(variaveis_previsoras_treinamento[0], cmap='gray')
 # plt.show()
 #cmap é o mapa de cores ele sendo = gray faz com que a imagem fique em preto e branco
-
 previsores_treinamento = X_treinamento.reshape(X_treinamento.shape[0],
                                                28, 28, 1)
 #vamo lá
 #28, 28 é o tamanho da imagem
 #1 é pq ao invez d usar rgb agnt vai usar so branco (oq n ta prenchido é preto)
+print(previsores_treinamento.shape, X_treinamento.shape)#(60000, 28, 28, 1) (60000, 28, 28)
+
 
 previsores_teste = X_teste.reshape(X_teste.shape[0], 28, 28, 1)
 #obs o nome das variaveis tenq ser diferente pq se não ao invez d virar 28 28 1 fica (valor q ja tava antes), 28, 28 ,1 oq da erro
