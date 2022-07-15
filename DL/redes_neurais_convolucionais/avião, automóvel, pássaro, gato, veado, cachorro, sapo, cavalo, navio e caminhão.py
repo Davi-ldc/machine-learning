@@ -4,7 +4,7 @@ from keras.models import Sequential
 from keras.layers import Dense, Dropout, Flatten, Conv2D, MaxPooling2D
 from keras.utils import np_utils 
 from keras.layers.normalization.batch_normalization import BatchNormalization
-from regex import F
+
 
 (X_treinamento, y_treinamento), (X_teste, y_teste) = cifar10.load_data()
 
