@@ -136,7 +136,7 @@ class grid(object):
 
 
 def guess(li):
-    model = tf.keras.models.load_model('model.h5')
+    model = tf.keras.models.load_model('modelos/numeros_escritos_a_mão.h5')
 
     predictions = model.predict(li)
     print(predictions[0])
@@ -144,7 +144,7 @@ def guess(li):
     print("I predict this number is a:", t)
     window = Tk()
     window.withdraw()
-    messagebox.showinfo("Prediction", "I predict this number is a: " + str(t))
+    messagebox.showinfo("é um" + str(t))
     window.destroy()
     #plt.imshow(li[0], cmap=plt.cm.binary)
     #plt.show()
