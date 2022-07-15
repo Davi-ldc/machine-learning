@@ -180,16 +180,27 @@ def main():
         g.draw(win)
         pygame.display.update()
 
-pygame.init()
-width = height = 560
-win = pygame.display.set_mode((width, height))
-pygame.display.set_caption("Numeros_escritos_a_mão")
-g = grid(28, 28, width, height)
-main()
+
+if __name__ == '__main__':
+    try:
+        import pyttsx3
+        engine = pyttsx3.init()
+        engine.say("botão esquerdo para apaga, direto desenha, espaço para prever")
+        engine.runAndWait()
+    except:
+        print("botão esquerdo para apaga, direto desenha, espaço para prever")
+    pygame.init()
+    width = height = 560
+    win = pygame.display.set_mode((width, height))
+    pygame.display.set_caption("Numeros_escritos_a_mão")
+    g = grid(28, 28, width, height)
+    main()
 
 
-pygame.quit()
-quit()
+    pygame.quit()
+    quit()
+
+
 
 
 
