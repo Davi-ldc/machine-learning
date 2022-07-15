@@ -50,6 +50,9 @@ rede_neural_convolucional.add(Dropout(0.2))
 rede_neural_convolucional.add(Dense(units=150, activation='relu'))
 rede_neural_convolucional.add(Dropout(0.2))
 
+rede_neural_convolucional.add(Dense(units=150, activation='relu'))
+rede_neural_convolucional.add(Dropout(0.2))
+
 
 #saida
 rede_neural_convolucional.add(Dense(units=10, activation='softmax'))
