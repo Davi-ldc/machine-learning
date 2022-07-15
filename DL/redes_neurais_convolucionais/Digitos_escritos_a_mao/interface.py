@@ -144,7 +144,7 @@ def guess(li):
     print("I predict this number is a:", t)
     window = Tk()
     window.withdraw()
-    messagebox.showinfo("é um" + str(t))
+    messagebox.showinfo("é um " + str(t))
     window.destroy()
     #plt.imshow(li[0], cmap=plt.cm.binary)
     #plt.show()

@@ -5,6 +5,7 @@ from keras.layers import Dense, Flatten, Conv2D, MaxPooling2D, Dropout
 from keras.utils import np_utils
 from keras.callbacks import TensorBoard
 from keras.layers.normalization.batch_normalization import BatchNormalization
+from keras.preprocessing.image import ImageDataGenerator
 
 (X_treinamento, y_treinamento), (X_teste, y_teste) = mnist.load_data()
 
