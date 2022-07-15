@@ -4,6 +4,7 @@ from keras.models import Sequential
 from keras.layers import Dense, Dropout, Flatten, Conv2D, MaxPooling2D
 from keras.utils import np_utils 
 from keras.layers.normalization.batch_normalization import BatchNormalization
+import tensorflow as tf
 
 
 (X_treinamento, y_treinamento), (X_teste, y_teste) = cifar10.load_data()
@@ -62,7 +63,7 @@ rede_neural_convolucional.compile(loss='categorical_crossentropy', optimizer='ad
 #tesorboard = TensorBoard(log_dir='logs/numeros', write_images=True)
 #dps roda: tensorboard --logdir logs/numeros
 
-rede_neural_convolucional.fit(previsores_treinamento, y_treinamento, batch_size=32, epochs=10, validation_data=(previsores_teste, y_teste))
+rede_neural_convolucional.fit(previsores_treinamento, y_treinamento, batch_size=10, epochs=45)
 #cada epoca ele ja mostrar os resultados na base d teste
 
 erro, acuracia = rede_neural_convolucional.evaluate(previsores_teste, y_teste)
