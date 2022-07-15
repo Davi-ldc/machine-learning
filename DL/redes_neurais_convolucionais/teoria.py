@@ -46,6 +46,7 @@ Durante o treinamneto ela descobre qual é o melhor jeito d reduzir a imagem
 """
 vc vai pegar os dados mandar eles prum kernel q vai modificar a imagem (reduzir a dimensinalidade da imagem)
 qunato maior o valor dentro da matrix gerada pelo operação de convolução mais importante ele é
+ele gera varios kernels presonalizados que alteram a imagem
 """
 
 #pooling
