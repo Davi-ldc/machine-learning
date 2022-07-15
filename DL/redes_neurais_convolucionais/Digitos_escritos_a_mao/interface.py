@@ -183,7 +183,7 @@ def main():
 pygame.init()
 width = height = 560
 win = pygame.display.set_mode((width, height))
-pygame.display.set_caption("Number Guesser")
+pygame.display.set_caption("Numeros_escritos_a_mão")
 g = grid(28, 28, width, height)
 main()
 
