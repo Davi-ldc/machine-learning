@@ -4,7 +4,6 @@ from keras.utils import np_utils
 from keras.layers.normalization.batch_normalization import BatchNormalization
 from keras.preprocessing.image import ImageDataGenerator
 from keras.callbacks import TensorBoard
-from keras.preprocessing import image
 
 
 rede_neural_convolucional = Sequential()
@@ -40,18 +39,15 @@ gerador_treinamento = ImageDataGenerator(rescale=1./255, rotation_range=7, horiz
 
 gerador_teste = ImageDataGenerator(rescale=1./255)
 
-data_treinamento = gerador_treinamento.flow_from_directory('drive/MyDrive/dataset/training_set', target_size=(128, 128), batch_size=32, class_mode='binary')
-data_teste = gerador_teste.flow_from_directory('drive/MyDrive/dataset/test_set', target_size=(128, 128), batch_size=32, class_mode='binary')
+data_treinamento = gerador_treinamento.flow_from_directory('drive/MyDrive/dataset/training_set', target_size=(128, 128), batch_size=60, class_mode='binary')
+data_teste = gerador_teste.flow_from_directory('drive/MyDrive/dataset/test_set', target_size=(128, 128), batch_size=60, class_mode='binary')
 #target_size é o tamanho da imagem
 #batch_size é a quantidade de imagens que serão usadas para treinamento
 #class_mode é binario qnd o a classe é binario ou categorical qnd é categorical
 
 # tesnorboard = TensorBoard(log_dir='logs/gatos_e_cachoros', histogram_freq=0, write_graph=True, write_images=True)
-rede_neural_convolucional.fit(data_treinamento, steps_per_epoch=100, epochs=10, validation_steps=32)
+rede_neural_convolucional.fit(data_treinamento, epochs=30)
 #steps_per_epoch é a quantidade de imagens que serão usadas para treinamento
 
-erro, acuracia = rede_neural_convolucional.evaluate(data_teste)
-print(f'Erro: {erro}, Acuracia: {acuracia}')
-
-# salva a CNN
-# rede_neural_convolucional.save('gatos_e_cachoros.h5')
+# erro, acuracia = rede_neural_convolucional.evaluate(data_teste)
+# print(f'Erro: {erro}, Acuracia: {acuracia}')

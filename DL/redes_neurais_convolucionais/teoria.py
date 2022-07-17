@@ -57,6 +57,16 @@ multiplica a imagem pelo detector d caracteristicas q é atualizado a cada inter
 da rede neural densa
 """
 
+#padding
+"""
+então... qnd vc multiplica o padding com a imagem, o tamanho dele é reduzido ex:
+se vc tem uma matrix d 6x6 e multiplica ela por outra matrix d 3x3 vc vai ter uma matrix d 4x4
+com padding="same" vc vai ter uma matrix d 6x6
+com padding="valid" vc vai ter uma matrix d 4x4
+"""
+
+
+
 #flattening
 """
 pega o resultado do pooling e transforma em um vetor que será passado para uma rede neural densa
