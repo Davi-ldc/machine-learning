@@ -17,16 +17,17 @@ janela.geometry('300x300')
 url = ''
 def selecionar_imagem():
     global url
-    url = filedialog.askopenfilename(initialdir=os.getcwd(), title="Select File", filetypes=(("Keras File", ".h5")))
+    url = filedialog.askopenfilename(initialdir=os.getcwd(), title="Select File", filetypes=(("png", "*.png"),("All Files", "*.*")))
     imagem = image.load_img(url, target_size=(128, 128))
     #grafico com a imagem
     grafico = plt.imshow(imagem)
+    plt.title('sua imagem')
     plt.show()
     imagem = image.img_to_array(imagem)
     imagem = imagem.reshape(1, 128, 128, 3)
     imagem = imagem / 255.0 
     previsao = model.predict(imagem)
-    previsao = np.argmax(previsao)
+    # previsao = np.argmax(previsao)
     #add um txt com a previsão
     txt = tk.Text(janela, width=30, height=1)
     txt.insert(tk.END, 'Previsão: ' + str(previsao))
