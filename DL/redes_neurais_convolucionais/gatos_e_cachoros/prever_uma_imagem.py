@@ -7,6 +7,7 @@ from tkinter import filedialog
 from keras.preprocessing import image
 
 
+
 model = load_model('modelos/gatos_e_cachoros.h5')
 
 
@@ -27,8 +28,7 @@ def selecionar_imagem():
     imagem = imagem.reshape(1, 128, 128, 3)
     imagem = imagem / 255.0 
     previsao = model.predict(imagem)
-    # previsao = np.argmax(previsao)
-    #add um txt com a previsão
+    previsao = np.argmax(previsao[0])
     txt = tk.Text(janela, width=30, height=1)
     txt.insert(tk.END, 'Previsão: ' + str(previsao))
     txt.pack()

@@ -1,9 +1,11 @@
 from keras.models import Sequential
+import pickle
 from keras.layers import Dense, Dropout, Flatten, Conv2D, MaxPooling2D
 from keras.utils import np_utils 
 from keras.layers.normalization.batch_normalization import BatchNormalization
 from keras.preprocessing.image import ImageDataGenerator
 from keras.callbacks import TensorBoard
+
 
 
 rede_neural_convolucional = Sequential()
@@ -51,3 +53,10 @@ rede_neural_convolucional.fit(data_treinamento, epochs=30)
 
 erro, acuracia = rede_neural_convolucional.evaluate(data_teste)
 print(f'Erro: {erro}, Acuracia: {acuracia}')
+
+#salva a rede neural convolucional
+rede_neural_convolucional.save('modelos/gatos_e_cachoros.h5')
+
+class_indices = data_treinamento.class_indices
+import pickle
+pickle.dump(class_indices, open('modelos/gatos_e_cachoros_class_indices.pkl', 'wb'))
