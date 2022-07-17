@@ -17,7 +17,7 @@ janela.geometry('300x300')
 url = ''
 def selecionar_imagem():
     global url
-    url = filedialog.askopenfilename(initialdir=os.getcwd(), title="Select File", filetypes=(("Keras File", "*.h5")))
+    url = filedialog.askopenfilename(initialdir=os.getcwd(), title="Select File", filetypes=(("Keras File", ".h5")))
     imagem = image.load_img(url, target_size=(128, 128))
     #grafico com a imagem
     grafico = plt.imshow(imagem)
@@ -34,3 +34,6 @@ def selecionar_imagem():
     
 #add um botão para selecionar a imagem
 botao = tk.Button(janela, text='Selecionar imagem', command=selecionar_imagem)
+botao.pack()
+ 
+janela.mainloop()
