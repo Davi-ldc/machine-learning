@@ -39,6 +39,7 @@ gerador_treinamento = ImageDataGenerator(rescale=1./255, rotation_range=7, horiz
 #shear_range é o tanto que ele muda os pixels pra outra direção
 #height_shift_range é o tanto que ele muda os pixels pra cima
 
+
 gerador_teste = ImageDataGenerator(rescale=1./255)
 
 data_treinamento = gerador_treinamento.flow_from_directory('drive/MyDrive/dataset/training_set', target_size=(128, 128), batch_size=60, class_mode='binary')
@@ -52,7 +53,7 @@ rede_neural_convolucional.fit(data_treinamento, epochs=30)
 #steps_per_epoch é a quantidade de imagens que serão usadas para treinamento
 
 erro, acuracia = rede_neural_convolucional.evaluate(data_teste)
-print(f'Erro: {erro}, Acuracia: {acuracia}')
+print(f'Erro: {erro}, Acuracia: {acuracia}')#0.5349681377410889, Acuracia: 0.7200000286102295
 
 #salva a rede neural convolucional
 rede_neural_convolucional.save('modelos/gatos_e_cachoros.h5')
