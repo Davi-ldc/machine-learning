@@ -49,5 +49,5 @@ data_teste = gerador_teste.flow_from_directory('drive/MyDrive/dataset/test_set',
 rede_neural_convolucional.fit(data_treinamento, epochs=30)
 #steps_per_epoch é a quantidade de imagens que serão usadas para treinamento
 
-# erro, acuracia = rede_neural_convolucional.evaluate(data_teste)
-# print(f'Erro: {erro}, Acuracia: {acuracia}')
+erro, acuracia = rede_neural_convolucional.evaluate(data_teste)
+print(f'Erro: {erro}, Acuracia: {acuracia}')
