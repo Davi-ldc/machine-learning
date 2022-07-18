@@ -29,6 +29,10 @@ def selecionar_imagem():
     imagem = imagem / 255.0 
     previsao = model.predict(imagem)
     previsao = np.argmax(previsao[0])
+    if previsao > 0.5:
+        previsao = 'Gato'
+    else:
+        previsao = 'Cachorro'
     txt = tk.Text(janela, width=30, height=1)
     txt.insert(tk.END, 'Previsão: ' + str(previsao))
     txt.pack()
