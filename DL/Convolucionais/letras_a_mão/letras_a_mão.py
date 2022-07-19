@@ -6,15 +6,17 @@ from keras.layers import Dense, Flatten, Conv2D, MaxPooling2D, Dropout, BatchNor
 
 
 
+data = pd.read_csv('drive/MyDrive/94_character_TMNIST.csv')
+data = data.drop(['names'], axis=1)
 
-data = pd.read_csv('94_character_TMNIST.csv')
-data = data.drop['names']
 
 variaveis_previsoras = data.iloc[:, 1:].values
-classe = data[0].values
+classe = data.iloc[:, 0].values
 
+classe = classe.reshape(-1, 1)
 encoder = OneHotEncoder()
-classe = encoder.fit_transform(classe)
+classe = encoder.fit_transform(classe).toarray()
+
 
 variaveis_previsoras_train, variaveis_previsoras_test, classe_train, classe_test = train_test_split(variaveis_previsoras, classe, test_size=0.25, random_state=0)
 
@@ -49,10 +51,15 @@ rede_neural_convolucional.add(Dropout(0.2))
 rede_neural_convolucional.add(Dense(units=94, activation='softmax'))
  
 rede_neural_convolucional.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+
 rede_neural_convolucional.fit(previsores_treinamento, classe_train, batch_size=32, epochs=10)
 
+erro, acuracia = rede_neural_convolucional.evaluate(previsores_teste, classe_test)
+print(f'Erro: {erro}, Acurácia: {acuracia}')
+
 #salva
-rede_neural_convolucional.save('rede_neural_convolucional.h5')
+rede_neural_convolucional.save('drive/MyDrive/letras_a_mão.h5')
 import pickle
 with open("encoder", "wb") as f: 
     pickle.dump(encoder, f)
+
