@@ -139,17 +139,22 @@ class grid(object):
 def guess(li):
     model = tf.keras.models.load_model('modelos/letras_a_mão.h5')
     encoder = pickle.load(open('modelos/encoder_letras_a_mão', 'rb'))
-    previsao = model.predict(li)
+    previsao_lista = model.predict(li)
+    print(previsao_lista)
+    
+    previsao = encoder.inverse_transform(previsao_lista)
     print(previsao)
-    np.argmax(previsao)
-    previsao = encoder.inverse_transform(previsao)
+    
     window = Tk()
-    window.withdraw()
-    print(previsao)
+    window.withdraw()    
     messagebox.showinfo(f'A letra é: {previsao}')
     window.destroy()
     #plt.imshow(li[0], cmap=plt.cm.binary)
     #plt.show()
+
+
+
+
 
 
 def main():
