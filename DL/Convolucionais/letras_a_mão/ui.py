@@ -138,7 +138,7 @@ class grid(object):
 
 def guess(li):
     model = tf.keras.models.load_model('modelos/letras_a_mão.h5')
-    encoder = pickle.load(open('modelos/encoder_letras_a_mao', 'rb'))
+    encoder = pickle.load(open('modelos/encoder_letras_a_mão', 'rb'))
     previsao = model.predict(li)
     print(previsao)
     np.argmax(previsao)
