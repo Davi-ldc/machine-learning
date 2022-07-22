@@ -145,9 +145,31 @@ def guess(li):
     previsao = encoder.inverse_transform(previsao_lista)
     print(previsao)
     
+    lista = previsao_lista.tolist()
+    max_index = lista[0].index(max(lista[0]))
+    lista[0][max_index] = 0
+    print(lista)
+    lista = np.array(lista)
+    # print(lista)
+    
+    
+    previsao2 = encoder.inverse_transform(lista)
+    print(previsao2)
+    
+    lista2 = lista.tolist()
+    max_index2 = lista2[0].index(max(lista2[0]))
+    lista2[0][max_index2] = 0
+    max_index3 = lista2[0].index(max(lista2[0]))
+    lista2[0][max_index3] = 0
+    lista2 = np.array(lista2)
+    print(lista2)
+     
+    previsao3 = encoder.inverse_transform(lista2)
+    print(previsao3)
+    
     window = Tk()
     window.withdraw()    
-    messagebox.showinfo(f'A letra é: {previsao}')
+    messagebox.showinfo(f'A letra é: {previsao}, {previsao2} ou {previsao3}')
     window.destroy()
     #plt.imshow(li[0], cmap=plt.cm.binary)
     #plt.show()
