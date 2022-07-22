@@ -169,7 +169,7 @@ def guess(li):
     
     window = Tk()
     window.withdraw()    
-    messagebox.showinfo(f'A letra é: {previsao}, {previsao2} ou {previsao3}')
+    messagebox.showinfo(f'A letra é: {previsao[0][0]}, {previsao2[0][0]} ou {previsao3[0][0]}')
     window.destroy()
     #plt.imshow(li[0], cmap=plt.cm.binary)
     #plt.show()
