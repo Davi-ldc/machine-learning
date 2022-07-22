@@ -9,3 +9,5 @@
 #não consegue armazenar dados muito distantes no tempo
 
 #ai pra resolver isso existe Long Short Term Memory(LSTM)
+#que ao ivez d só passar a informação pra frente faz (matematica) nos dados
+#ai ele usa tanh + (matematica) e da certo 😁😁😁
