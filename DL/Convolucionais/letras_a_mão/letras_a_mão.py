@@ -5,7 +5,7 @@ from keras.models import Sequential
 from keras.layers import Dense, Flatten, Conv2D, MaxPooling2D, Dropout, BatchNormalization
 
 
-
+#https://www.kaggle.com/datasets/nikbearbrown/tmnist-alphabet-94-characters
 data = pd.read_csv('drive/MyDrive/94_character_TMNIST.csv')
 data = data.drop(['names'], axis=1)
 
