@@ -31,6 +31,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, LSTM
+from pydantic import NoneStr
 from sklearn.preprocessing import MinMaxScaler
 from keras.callbacks import TensorBoard
 

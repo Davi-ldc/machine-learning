@@ -1,14 +1,24 @@
 import pandas as pd
+import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OneHotEncoder
 from keras.models import Sequential
 from keras.layers import Dense, Flatten, Conv2D, MaxPooling2D, Dropout, BatchNormalization
 
-
 #https://www.kaggle.com/datasets/nikbearbrown/tmnist-alphabet-94-characters
+
 data = pd.read_csv('drive/MyDrive/94_character_TMNIST.csv')
 data = data.drop(['names'], axis=1)
 
+
+variaveis_previsoras = data.iloc[:, 1:]
+classe = data.iloc[:, 0]
+
+
+plt.figure(figsize=(30, 10))
+plt.bar(classe.unique(),classe.value_counts(),color='#851D2D')
+plt.title('Class Distribution in train Data')
+plt.show()
 
 variaveis_previsoras = data.iloc[:, 1:].values
 classe = data.iloc[:, 0].values

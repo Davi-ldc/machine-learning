@@ -3,7 +3,7 @@ import pandas as pd
 import keras
 from keras.models import Sequential
 from keras.layers import Dense, Dropout
-from keras.callbacks import TensorBoard
+from keras.callbacks import TensorBoard, EarlyStopping, ReduceLROnPlateau
 
 #camadas densas são camdas em que cada neurônio é conectado a todos os outros da proxima camada
 
@@ -59,6 +59,21 @@ tensorboard = TensorBoard(log_dir='logs/teoria_redes_neurais')
 #dps é so dabrir o cmd, digitar cd (caminho ate a pasta aberta no vscode 
 # e digitar tensorboard --logdir logs/teoria_redes_neurais
 
+
+#lebra aql negocio do sklearn q ele para o treinamento se n a ia n melhorar?
+#essa classe faz isso
+Earlystopping = EarlyStopping(monitor='loss', min_delta=1e-15, patience=10, verbose=1)
+#monitor = monitora o valor do erro
+#min_delta = o valor minimo que o erro deve ser reduzido
+#patience = quantos epocas em que a erro é reduzido menos q o min_delta que
+# ele vai esperar antes de parar o treinamento
+#verbose = mostra o progresso do treinamento
+
+print(1e-3)
+#essa classe reduz a taxa de aprendizado caso a rd n esteja melhorando
+reducer_lr = ReduceLROnPlateau(monitor='loss', factor=0.1, patience=10, verbose=1, min_delta=1e-3)
+#monitor = monitora o valor do erro
+#factor = o valor que a taxa de aprendizado vai ser reduzida
 
 classificador.fit(previsores, classe, batch_size = 10, epochs = 1000, callbacks = [tensorboard])
 #epochs = numero de vezes q vc vai frz o ajuste de pesos
