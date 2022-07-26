@@ -5,6 +5,7 @@ from keras.layers import InputLayer, Dense, Dropout, Flatten, Reshape, Conv2D, M
 from keras.regularizers import L1L2#add uma penalidade qnd a pontuação é mt baixa
 from keras.models import Sequential
 from keras.callbacks import TensorBoard
+from keras.optimizers import RMSprop
 
 
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
@@ -28,11 +29,17 @@ Descriminador.add(BatchNormalization())
 Descriminador.add(MaxPooling2D(pool_size=(2, 2)))
 Descriminador.add(Flatten())
 Descriminador.add(Dense(units=500, activation='relu', kernel_regularizer=L1L2(l1=1e-5, l2=1e-5)))
-Descriminador.add(Dense(units=500, activation='relu', kernel_regularizer=L1L2(l1=1e-5, l2=1e-5)))
+Descriminador.add(Dense(units=300, activation='relu', kernel_regularizer=L1L2(l1=1e-5, l2=1e-5)))
 Descriminador.add(Dense(units=1, activation='sigmoid'))
 
 
 #compilando os modelos
-Gerador.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
-Descriminador.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+opitimizer = RMSprop()
+Gerador.compile(loss='binary_crossentropy', optimizer='rmsprop', metrics=['accuracy'])
+Descriminador.compile(loss='binary_crossentropy', optimizer='rmsprop', metrics=['accuracy'])
+#MTTTTTTT DIFICIL 
+"""
+apartir dq n da, teria q treinar os dois ao msm tempo, de preferencia usando pythorch, só q ai é MT
+low level. algum dia eu chego nesse nivel (eu acho)
 
+"""
