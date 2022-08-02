@@ -143,7 +143,6 @@ def treinar(epocas, batch_size=64, save_interval=200):
     return Descriminator_loss, Generator_loss
 
 
-
 D_loss, G_loss = treinar(epocas=30000, batch_size=32, save_interval=200)
 
 
@@ -152,4 +151,6 @@ plt.plot(D_loss, label='Descriminator')
 plt.plot(G_loss, label='Generator')
 plt.legend()
 plt.show() 
- 
+
+#salva o gerador
+Gerador.save('gerador.h5')
