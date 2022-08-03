@@ -1,7 +1,7 @@
 import numpy as np
 from keras.datasets import mnist
 from keras.models import Sequential
-from keras.layers import Dense, Reshape, Flatten, LeakyReLU, BatchNormalization
+from keras.layers import Dense, Reshape, Flatten, LeakyReLU, BatchNormalization, Conv2D, MaxPooling2D
 from keras.optimizers import adam_v2
 
 
@@ -24,15 +24,16 @@ adam = adam_v2.Adam(learning_rate=0.0001)
 def criar_gerador():
     Gerador = Sequential()
 
-    Gerador.add(Dense(256, input_dim=ruido))
+    Gerador.add(Dense(512, input_dim=ruido))
     Gerador.add(LeakyReLU(alpha=0.2))
     Gerador.add(BatchNormalization(momentum=0.8))
 
     Gerador.add(Dense(256))
     Gerador.add(LeakyReLU(alpha=0.2))
     Gerador.add(BatchNormalization(momentum=0.8))
-
-    Gerador.add(Dense(256))
+    
+    
+    Gerador.add(Dense(128))
     Gerador.add(LeakyReLU(alpha=0.2))
     Gerador.add(BatchNormalization(momentum=0.8))
 
@@ -45,7 +46,6 @@ def criar_gerador():
 
 def Criar_Descriminador():
     Descriminador = Sequential()
-
     Descriminador.add(Flatten(input_shape=tamnho_da_imagem))
     Descriminador.add(Dense(512))
     Descriminador.add(LeakyReLU(alpha=0.2))
@@ -72,7 +72,7 @@ GAN.compile(loss='binary_crossentropy', optimizer=adam)
 
 
 
-def treinar(epocas, batch_size=64, save_interval=200):
+def treinar(epocas, batch_size=30000, save_interval=200):
     (X_train, _), (_, _) = mnist.load_data()
     #so vou usar os dados de treinamento
 
@@ -136,14 +136,14 @@ def treinar(epocas, batch_size=64, save_interval=200):
                     # axs[i,j].imshow(gen_imgs[cnt])
                     axs[i,j].axis('off')
                     cnt += 1
-            fig.savefig("imagens/%.8f.png" % save_name)
+            fig.savefig("drive/MyDrive/imagem/%.8f.png" % save_name)
             print('saved')
             plt.close()
         
     return Descriminator_loss, Generator_loss
 
 
-D_loss, G_loss = treinar(epocas=30000, batch_size=32, save_interval=200)
+D_loss, G_loss = treinar(epocas=22000, batch_size=32, save_interval=200)
 
 
 #graficos
@@ -153,4 +153,4 @@ plt.legend()
 plt.show() 
 
 #salva o gerador
-Gerador.save('gerador.h5')
+Gerador.save('gerador_numeros.h5')
