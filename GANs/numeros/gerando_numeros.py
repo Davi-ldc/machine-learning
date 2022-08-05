@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from keras.models import load_model
 
-Gerador = load_model('modelos/gerador.h5')
+Gerador = load_model('modelos/gerador_numeros.h5')
 
 noise = 100
 
@@ -17,8 +17,7 @@ def gerar_numero():
     r, c = 5, 5
     ruido2 = np.random.normal(0, 1, (r * c, noise))
     gen_imgs = Gerador.predict(ruido2)
-    save_name += 0.00000001
-    print("%.8f" % save_name)
+
 
     # Rescale images 0 - 1
     gen_imgs = 0.5 * gen_imgs + 0.5

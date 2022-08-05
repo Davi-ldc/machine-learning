@@ -63,7 +63,6 @@ Descriminador.trainable = False#congela o gerador
 
 
 GAN = Sequential()
-GAN = Sequential()
 GAN.add(Gerador)
 GAN.add(Descriminador)
 
