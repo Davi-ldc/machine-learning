@@ -127,7 +127,7 @@ def treinar(epocas=30000, batch_size=64, save_interval=200):
                     # axs[i,j].imshow(gen_imgs[cnt])
                     axs[i,j].axis('off')
                     cnt += 1
-            fig.savefig("drive/MyDrive/imagem/%.8f.png" % save_name)
+            fig.savefig("imagens/%.8f.png" % save_name)
             print('saved')
             plt.close()
             
