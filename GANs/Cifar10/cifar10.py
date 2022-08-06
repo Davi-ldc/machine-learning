@@ -7,7 +7,7 @@ from keras.optimizers import adam_v2
 from keras.callbacks import TensorBoard
 import matplotlib.pyplot as plt
 
-
+save_name = 0
 altura_da_imagem = 32
 largura_da_imagem = 32
 canais = 3#r g b
@@ -84,29 +84,28 @@ def treinar(epocas=30000, batch_size=64, save_interval=200):
     classes = np.ones((batch_size, 1))
     classes_fakes = np.zeros((batch_size, 1))
     
-    bat_per_epoca = int(x_train.shape[0] / batch_size)
-    for epoch in range(epocas):
-        for j in range(bat_per_epoca):
-            indiecs_aleatorios = np.random.randint(0, x_train.shape[0], batch_size)
-            real_images = x_train[indiecs_aleatorios]
-            
-            noise = np.random.normal(0, 1, (batch_size, ruido))
-            fake_images = Gerador.predict(noise)
-            
-            drecimanator_loss_real = Desriminador.train_on_batch(real_images, classes)
-            drecimanator_loss_fake = Desriminador.train_on_batch(fake_images, classes_fakes)
-            drecimanator_loss = 0.5 * np.add(drecimanator_loss_real, drecimanator_loss_fake)
-            
-            noise = np.random.normal(0, 1, (batch_size, ruido))
 
-            gan_loss = GAN.train_on_batch(noise, classes)
-            
-            print(f"""
-                Descriminador loss: {drecimanator_loss[0]}
-                Descriminador accuracy: {drecimanator_loss[1]}
-                Gerador loss: {gan_loss}
-                Epoca: {epoch}
-                  """)
+    for epoch in range(epocas):
+        indiecs_aleatorios = np.random.randint(0, x_train.shape[0], batch_size)
+        real_images = x_train[indiecs_aleatorios]
+        
+        noise = np.random.normal(0, 1, (batch_size, ruido))
+        fake_images = Gerador.predict(noise)
+        
+        drecimanator_loss_real = Desriminador.train_on_batch(real_images, classes)
+        drecimanator_loss_fake = Desriminador.train_on_batch(fake_images, classes_fakes)
+        drecimanator_loss = 0.5 * np.add(drecimanator_loss_real, drecimanator_loss_fake)
+        
+        noise = np.random.normal(0, 1, (batch_size, ruido))
+
+        gan_loss = GAN.train_on_batch(noise, classes)
+        
+        print(f"""
+            Descriminador loss: {drecimanator_loss[0]}
+            Descriminador accuracy: {drecimanator_loss[1]}
+            Gerador loss: {gan_loss}
+            Epoca: {epoch}
+              """)
             
         if (epoch % save_interval) == 0:
             r, c = 5, 5
@@ -136,3 +135,5 @@ def treinar(epocas=30000, batch_size=64, save_interval=200):
     
     
 treinar()
+#salva o gerador 
+Gerador.save('gerador.h5')
