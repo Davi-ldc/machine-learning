@@ -137,3 +137,4 @@ def treinar(epocas=30000, batch_size=64, save_interval=200):
 treinar()
 #salva o gerador 
 Gerador.save('gerador.h5')
+
