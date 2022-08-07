@@ -4,10 +4,10 @@ from keras.layers import Dense, Conv2D, MaxPooling2D, Flatten, Dropout, BatchNor
 from keras.layers import Conv2DTranspose
 from keras.models import Sequential
 from keras.optimizers import adam_v2
-from keras.callbacks import TensorBoard
+
 import matplotlib.pyplot as plt
 
-save_name = 0
+
 altura_da_imagem = 32
 largura_da_imagem = 32
 canais = 3#r g b
@@ -23,18 +23,18 @@ def criar_gerador():
     Gerador.add(LeakyReLU(alpha=0.2))
     Gerador.add(Reshape(target_shape=(4, 4, 256)))
     
-    Gerador.add(Conv2DTranspose(filters=256, kernel_size=(4, 4), strides=(2, 2), padding='same'))
+    Gerador.add(Conv2DTranspose(filters=128, kernel_size=(4, 4), strides=(2, 2), padding='same'))
     #RETORNA UMA MATRIX DE 8 X 8
     Gerador.add(LeakyReLU(alpha=0.2))
-    Gerador.add(BatchNormalization())
-    Gerador.add(Conv2DTranspose(filters=128, kernel_size=(4, 4), strides=(2, 2), padding='same'))
+    
+    Gerador.add(Conv2DTranspose(filters=256, kernel_size=(4, 4), strides=(2, 2), padding='same'))
     #RETORNA UMA MATRIX DE 16 X 16
     Gerador.add(LeakyReLU(alpha=0.2))
-    Gerador.add(BatchNormalization())
-    Gerador.add(Conv2DTranspose(filters=64, kernel_size=(4, 4), strides=(2, 2), padding='same'))
+    
+    Gerador.add(Conv2DTranspose(filters=512, kernel_size=(4, 4), strides=(2, 2), padding='same'))
     #RETORNA UMA MATRIX DE 32 X 32
     Gerador.add(LeakyReLU(alpha=0.2))
-    Gerador.add(BatchNormalization())
+    
      
     Gerador.add(Conv2D(3, (3, 3), activation='tanh', padding='same'))
     #3 pq é RGB tanh pq enquanto maior o valor mais branco é img e tem um MAX no relu
@@ -49,17 +49,13 @@ def criar_descriminado():
     Dreciminador = Sequential()
     Dreciminador.add(Conv2D(filters=128, kernel_size=(3, 3), input_shape=tamnho_da_imagem, padding='same'))
     Dreciminador.add(LeakyReLU(alpha=0.2))
-    Dreciminador.add(MaxPooling2D(pool_size=(2, 2)))
-    Dreciminador.add(Dropout(0.2))
     Dreciminador.add(Conv2D(filters=128, kernel_size=(3, 3), padding='same'))
     Dreciminador.add(LeakyReLU(alpha=0.2))
-    Dreciminador.add(MaxPooling2D(pool_size=(2, 2)))
-    Dreciminador.add(Dropout(0.2))
     Dreciminador.add(Conv2D(filters=256, kernel_size=(3, 3), padding='same'))
     Dreciminador.add(LeakyReLU(alpha=0.2))
-    Dreciminador.add(MaxPooling2D(pool_size=(2, 2)))
     
     Dreciminador.add(Flatten())
+    Dreciminador.add(Dropout(0.2))
     Dreciminador.add(Dense(units=1, activation='sigmoid'))
     print(Dreciminador.summary())
     return Dreciminador
@@ -75,9 +71,8 @@ GAN.compile(loss='binary_crossentropy', optimizer=adam)
 
 
 
-tensorboard = TensorBoard(log_dir='logs/cifar10GAN')
 
-def treinar(epocas=30000, batch_size=64, save_interval=200):
+def treinar(epocas=100, batch_size=5000, save_interval=200):
     (x_train, _), (_, _) = cifar10.load_data()
     x_train = x_train / 127.5 - 1.
     
@@ -99,13 +94,13 @@ def treinar(epocas=30000, batch_size=64, save_interval=200):
         noise = np.random.normal(0, 1, (batch_size, ruido))
 
         gan_loss = GAN.train_on_batch(noise, classes)
-        
+            
         print(f"""
-            Descriminador loss: {drecimanator_loss[0]}
-            Descriminador accuracy: {drecimanator_loss[1]}
-            Gerador loss: {gan_loss}
-            Epoca: {epoch}
-              """)
+                Descriminador loss: {drecimanator_loss[0]}
+                Descriminador accuracy: {drecimanator_loss[1]}
+                Gerador loss: {gan_loss}
+                Epoca: {epoch}
+                  """)
             
         if (epoch % save_interval) == 0:
             r, c = 5, 5
@@ -126,7 +121,7 @@ def treinar(epocas=30000, batch_size=64, save_interval=200):
                     # axs[i,j].imshow(gen_imgs[cnt])
                     axs[i,j].axis('off')
                     cnt += 1
-            fig.savefig("imagens/%.8f.png" % save_name)
+            fig.savefig("drive/MyDrive/cifar10_imgs/%.8f.png" % save_name)
             print('saved')
             plt.close()
             
@@ -135,6 +130,5 @@ def treinar(epocas=30000, batch_size=64, save_interval=200):
     
     
 treinar()
-#salva o gerador 
-Gerador.save('gerador.h5')
 
+Gerador.save('Gerador.h5')
