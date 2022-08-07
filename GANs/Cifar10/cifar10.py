@@ -7,7 +7,7 @@ from keras.optimizers import adam_v2
 
 import matplotlib.pyplot as plt
 
-
+save_name = 0 
 altura_da_imagem = 32
 largura_da_imagem = 32
 canais = 3#r g b
@@ -72,7 +72,7 @@ GAN.compile(loss='binary_crossentropy', optimizer=adam)
 
 
 
-def treinar(epocas=100, batch_size=5000, save_interval=200):
+def treinar(epocas=2000, batch_size=1000, save_interval=200):
     (x_train, _), (_, _) = cifar10.load_data()
     x_train = x_train / 127.5 - 1.
     
