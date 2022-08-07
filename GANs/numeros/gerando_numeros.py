@@ -3,7 +3,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 from keras.models import load_model
 
-Gerador = load_model('modelos\cifar10_gerador.h5')
+print("Carregando modelo...")
+Gerador = load_model('modelos/gerador_numeros.h5')
+print("Modelo carregado!")
 
 noise = 100
 

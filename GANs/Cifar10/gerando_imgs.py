@@ -3,7 +3,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 from keras.models import load_model
 
-Gerador = load_model('modelos/gerador_numeros.h5')
+
+print("Carregando modelo...")
+Gerador = load_model('modelos\cifar10_gerador.h5')
+print("Modelo carregado!")
 
 noise = 100
 
@@ -15,23 +18,18 @@ janela.geometry('300x300')
 
 def gerar_numero():
     r, c = 5, 5
-    ruido2 = np.random.normal(0, 1, (r * c, noise))
-    gen_imgs = Gerador.predict(ruido2)
+    ruido = np.random.normal(0, 1, (r * c, noise))
+    gen_imgs = Gerador.predict(ruido)
+
 
 
     # Rescale images 0 - 1
-    gen_imgs = 0.5 * gen_imgs + 0.5
+    gen_imgs = (gen_imgs + 1) / 2.0
 
-    fig, axs = plt.subplots(r, c)
-    cnt = 0
-    for i in range(r):
-        for j in range(c):
-            axs[i,j].imshow(gen_imgs[cnt, :,:,0], cmap='gray')
-            # axs[i,j].imshow(gen_imgs[cnt])
-            axs[i,j].axis('off')
-            cnt += 1
-    plt.show()
-
+    for img in gen_imgs:
+        plt.imshow(img)
+        plt.show()
+        plt.close()
     
 #add o botão q gera as imgs
 botao = tk.Button(janela, text='Gerar', command=gerar_numero)
