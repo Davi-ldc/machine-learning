@@ -89,7 +89,7 @@ def treinar(epocas=2000, batch_size=1000, save_interval=200):
         
         drecimanator_loss_real = Desriminador.train_on_batch(real_images, classes)
         drecimanator_loss_fake = Desriminador.train_on_batch(fake_images, classes_fakes)
-        drecimanator_loss = 0.5 * np.add(drecimanator_loss_real, drecimanator_loss_fake)
+        drecimanator_loss = 0.05 * np.add(drecimanator_loss_real, drecimanator_loss_fake)
         
         noise = np.random.normal(0, 1, (batch_size, ruido))
 
