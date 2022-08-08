@@ -1,5 +1,5 @@
-!mkdir imgs_geradas
 import keras
+import pickle
 import numpy as np
 import tensorflow as tf
 from keras.datasets import cifar10
@@ -156,7 +156,11 @@ class Calback_q_salva_as_imgs(keras.callbacks.Callback):
         for c in range(self.qnts_imgs):
             img = keras.preprocessing.image.array_to_img(imgs_geradas[c])
             img.save(f'imgs_geradas/img_{epoca}_{c}.png')
-            
+        
+
+        #salva o gerador
+        with open(f'gerador_{epoca}.h5', 'wb') as f:
+            pickle.dump(self.model.Gerador, f)
 
 
 #treina
@@ -176,10 +180,10 @@ rede_neural_convolucional_generativa_adversaria.compile(
 rede_neural_convolucional_generativa_adversaria.fit(
     dataset,
     epochs=epocas,
-    callbacks=[Calback_q_salva_as_imgs(qnts_imgs=3, tamanho_do_ruido=128)],
+    callbacks=[Calback_q_salva_as_imgs(qnts_imgs=3, tamanho_do_ruido=128)]
 )
 
-import pickle
+
 #salva o Gerador
 with open('Gerador.pkl', 'wb') as f:
     pickle.dump(rede_neural_convolucional_generativa_adversaria.Gerador, f)
