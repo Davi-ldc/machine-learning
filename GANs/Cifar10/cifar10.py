@@ -53,7 +53,7 @@ def criar_gerador():
 
 def criar_descriminado():
     Dreciminador = Sequential()
-    Dreciminador.add(Input(shape=(64, 64, 3)))
+    Dreciminador.add(Input(shape=(32, 32, 3)))
     Dreciminador.add(Conv2D(filters=64, kernel_size=4, strides=2, padding='same'))
     Dreciminador.add(LeakyReLU(alpha=0.2))
     Dreciminador.add(Conv2D(filters=128, kernel_size=4, strides=2, padding='same'))
@@ -100,10 +100,13 @@ class GAN(keras.Model):
         
         imgs_falsas_e_imgs_reais = tf.concat([imgs_geradas, real_images], axis=0)
         
-        classes = tf.concat([tf.ones([batch_size, 1]), tf.zeros([batch_size, 1])], axis=0)
         
+        classes = tf.concat(
+            [tf.ones((batch_size, 1)), tf.zeros((batch_size, 1))], axis=0
+        )
+
         #por algum motivo do alem se vc add ruido nas classes os resultados melhoram, então...
-        classes += 0.05 * tf.random.uniform(classes)
+        classes += 0.05 * tf.random.uniform(tf.shape(classes))
 
         
         #treian o descriminador
