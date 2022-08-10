@@ -1,196 +1,172 @@
-import keras
-import pickle
-import numpy as np
 import tensorflow as tf
-from keras.datasets import cifar10
-from keras.layers import Dense, Conv2D, MaxPooling2D, Flatten, Dropout, BatchNormalization, Reshape, LeakyReLU
-from keras.layers import Conv2DTranspose, Input
-from keras.models import Sequential
-
-
+from tensorflow import keras
+from tensorflow.keras import layers
+import numpy as np
 import matplotlib.pyplot as plt
+from keras.datasets import cifar10
+import pickle
+
+data = cifar10.load_data()
+(x_train, _), (_, _) = data
+
+dataset = x_train / 255.0#normaliza
 
 
-altura_da_imagem = 32
-largura_da_imagem = 32
-canais = 3#r g b
-tamnho_da_imagem = (altura_da_imagem, largura_da_imagem, canais)
-ruido = 128
+
+Descriminador = keras.Sequential(
+    [
+        keras.Input(shape=(32, 32, 3)),
+        layers.Conv2D(64, kernel_size=4, strides=2, padding="same"),
+        layers.LeakyReLU(alpha=0.2),
+        layers.Conv2D(128, kernel_size=4, strides=2, padding="same"),
+        layers.LeakyReLU(alpha=0.2),
+        layers.Conv2D(128, kernel_size=4, strides=2, padding="same"),
+        layers.LeakyReLU(alpha=0.2),
+        layers.Flatten(),
+        layers.Dropout(0.2),
+        layers.Dense(1, activation="sigmoid"),
+    ],
+    name="Descriminador",
+)
+Descriminador.summary()
 
 
-(dataset, _), (_, _) = cifar10.load_data()
-dataset = dataset / 255.0
 
 
-#padding = same pra n perder informação qnd multiplicar as matrizes
-def criar_gerador():
-    Gerador = Sequential()
-    Gerador.add(Input(shape=(ruido,)))
-    Gerador.add(Dense(units=4 * 4 * 128))
-    #
-    Gerador.add(LeakyReLU(alpha=0.2))
-    Gerador.add(Reshape(target_shape=(4, 4, 128)))
-    
-    Gerador.add(Conv2DTranspose(filters=128, kernel_size=(4, 4), strides=(2, 2), padding='same'))
-    #RETORNA UMA MATRIX DE 8 X 8
-    Gerador.add(LeakyReLU(alpha=0.2))
-    
-    Gerador.add(Conv2DTranspose(filters=256, kernel_size=(4, 4), strides=(2, 2), padding='same'))
-    #RETORNA UMA MATRIX DE 16 X 16
-    Gerador.add(LeakyReLU(alpha=0.2))
-    
-    Gerador.add(Conv2DTranspose(filters=512, kernel_size=(4, 4), strides=(2, 2), padding='same'))
-    #RETORNA UMA MATRIX DE 32 X 32
-    Gerador.add(LeakyReLU(alpha=0.2))
-    
-     
-    Gerador.add(Conv2D(3, 5, activation='sigmoid', padding='same'))
-    #3 pq é RGB tanh pq enquanto maior o valor mais branco é img e tem um MAX no relu
-    #ja tanh retorna numeros negativos
-    print(Gerador.summary())
-    return Gerador
+tamanho_do_ruido = 128
+
+Gerador = keras.Sequential(
+    [
+        keras.Input(shape=(tamanho_do_ruido,)),
+        layers.Dense(4 * 4 * 128),
+        layers.Reshape((4, 4, 128)),
+        layers.Conv2DTranspose(128, kernel_size=4, strides=2, padding="same"),
+        layers.LeakyReLU(alpha=0.2),
+        layers.Conv2DTranspose(256, kernel_size=4, strides=2, padding="same"),
+        layers.LeakyReLU(alpha=0.2),
+        layers.Conv2DTranspose(512, kernel_size=4, strides=2, padding="same"),
+        layers.LeakyReLU(alpha=0.2),
+        layers.Conv2D(3, kernel_size=5, padding="same", activation="sigmoid"),
+    ],
+    name="Gerador",
+)
+print(Gerador.summary())
 
 
-def criar_descriminado():
-    Dreciminador = Sequential()
-    Dreciminador.add(Input(shape=(32, 32, 3)))
-    Dreciminador.add(Conv2D(filters=64, kernel_size=4, strides=2, padding='same'))
-    Dreciminador.add(LeakyReLU(alpha=0.2))
-    Dreciminador.add(Conv2D(filters=128, kernel_size=4, strides=2, padding='same'))
-    Dreciminador.add(LeakyReLU(alpha=0.2))
-    Dreciminador.add(Conv2D(filters=128, kernel_size=4, strides=2, padding='same'))
-    Dreciminador.add(LeakyReLU(alpha=0.2))
-    
-    Dreciminador.add(Flatten())
-    Dreciminador.add(Dropout(0.2))
-    Dreciminador.add(Dense(units=1, activation='sigmoid'))
-    print(Dreciminador.summary())
-    return Dreciminador
+
+
+
 
 class GAN(keras.Model):
-    
-    def __init__(self, Discriminador, Gerador, tamnho_do_ruido):
-        super(GAN, self).__init__()
-        self.Discriminador = Discriminador
+    def __init__(self, Descriminador, Gerador, tamanho_do_ruido):
+        super(GAN, self).__init__()#roda o init d keras.model
+        self.Descriminador = Descriminador
         self.Gerador = Gerador
-        self.tamanho_do_ruido = tamnho_do_ruido
-        super(GAN, self).make_test_function()
-        
-        
-    def compile(self, D_optimizador, G_optimizador, loss_fn):
+        self.tamanho_do_ruido = tamanho_do_ruido
+
+    def compile(self, d_optimizer, g_optimizer, loss_fn):
         super(GAN, self).compile()
-        self.D_optimizador = D_optimizador
-        self.G_optimizador = G_optimizador
+        self.d_optimizer = d_optimizer
+        self.g_optimizer = g_optimizer
         self.loss_fn = loss_fn
-        self.D_loss_metric = keras.metrics.Mean(name='D_loss')
-        self.G_loss_metric = keras.metrics.Mean(name='G_loss')
-    
+        self.d_loss_metric = keras.metrics.Mean(name="d_loss")
+        self.g_loss_metric = keras.metrics.Mean(name="g_loss")
+
     @property
     def metrics(self):
-        return [self.D_loss_metric, self.G_loss_metric]
-
+        return [self.d_loss_metric, self.g_loss_metric]
 
     def train_step(self, real_images):
+        
         batch_size = tf.shape(real_images)[0]
-        #numero de imgs na base d dados
-        noise = tf.random.normal([batch_size, self.tamanho_do_ruido])
-        # vetor d numeros aleatorios d   0 ao tamnho da base de dados, do tamnho do ruido
-        
-        imgs_geradas = self.Gerador(noise)
-        
-        imgs_falsas_e_imgs_reais = tf.concat([imgs_geradas, real_images], axis=0)
-        
-        
+        #                     quantas imgs tem na base d dados
+        ruido = tf.random.normal(shape=(batch_size, self.tamanho_do_ruido))
+
+
+        imgs_geradas = self.Gerador(ruido)
+
+
+        imgs_combinadas = tf.concat([imgs_geradas, real_images], axis=0)
+
+        #imgs falsas = 1    imgs reais = 0
         classes = tf.concat(
             [tf.ones((batch_size, 1)), tf.zeros((batch_size, 1))], axis=0
         )
-
-        #por algum motivo do alem se vc add ruido nas classes os resultados melhoram, então...
+        
+        #por algum motivo do alem se vc add ruido na classe os resultados ficam melhores então...
         classes += 0.05 * tf.random.uniform(tf.shape(classes))
 
-        
-        #treian o descriminador
+        # treina o descriminador
         with tf.GradientTape() as tape:
-            previsoes = self.Discriminador(imgs_falsas_e_imgs_reais)
-            d_loss = self.loss_fn(classes, previsoes)
-            
-        gradiente = tape.gradient(d_loss, self.Discriminador.trainable_weights)
-        #ajusta os pesos do descriminador
-        self.D_optimizador.apply_gradients(
-            zip(gradiente, self.Discriminador.trainable_weights
-                ))
-        
-        mais_ruido = tf.random.normal(shape=[batch_size, self.tamanho_do_ruido])
-        
-        classes_falsas = tf.zeros((batch_size, 1))
-        
-        
-        #treina o gerador 
+            predictions = self.Descriminador(imgs_combinadas)
+            d_loss = self.loss_fn(classes, predictions)
+        grads = tape.gradient(d_loss, self.Descriminador.trainable_weights)
+        self.d_optimizer.apply_gradients(
+            zip(grads, self.Descriminador.trainable_weights)
+        )
+
+        # mais ruido
+        mais_ruido = tf.random.normal(shape=(batch_size, self.tamanho_do_ruido))
+
+        # Assemble classes that say "all real images"
+        misleading_classes = tf.zeros((batch_size, 1))
+
+        # Train the Gerador (note that we should *not* update the weights
+        # of the Descriminador)!
         with tf.GradientTape() as tape:
-            previsoes = self.Discriminador(self.Gerador(mais_ruido))
-            g_loss = self.loss_fn(classes_falsas, previsoes)
-        gradiente = tape.gradient(g_loss, self.Gerador.trainable_weights)
-        self.G_optimizador.apply_gradients(
-            zip(gradiente, self.Gerador.trainable_weights)
-            ) 
-        
-        #atualiza as metricas
-        self.D_loss_metric.update_state(d_loss)
-        self.G_loss_metric.update_state(g_loss)
-        
-        return {'D_loss': self.D_loss_metric.result(), 
-                'G_loss': self.G_loss_metric.result()}
+            predictions = self.Descriminador(self.Gerador(mais_ruido))
+            g_loss = self.loss_fn(misleading_classes, predictions)
+        grads = tape.gradient(g_loss, self.Gerador.trainable_weights)
+        self.g_optimizer.apply_gradients(zip(grads, self.Gerador.trainable_weights))
+
+        # atualiza as metricas
+        self.d_loss_metric.update_state(d_loss)
+        self.g_loss_metric.update_state(g_loss)
+        return {
+            "d_loss": self.d_loss_metric.result(),
+            "g_loss": self.g_loss_metric.result(),
+        }
 
 
-class Calback_q_salva_as_imgs(keras.callbacks.Callback):
-    def __init__(self, qnts_imgs=3, tamanho_do_ruido=128):
-        self.qnts_imgs = qnts_imgs
+
+
+
+class Callback_q_monitora_a_gan(keras.callbacks.Callback):
+    def __init__(self, num_img=2, tamanho_do_ruido=128):
+        self.num_img = num_img
         self.tamanho_do_ruido = tamanho_do_ruido
-    
-    def on_epoch_end(self, epoca):
-        ruido = tf.random.normal(shape=[self.qnts_imgs, self.tamanho_do_ruido])
-        imgs_geradas = self.model.Gerador(ruido)
-        imgs_geradas *= 255#volta as imgs pro normal
-        imgs_geradas.numpy()#transforma em array
-        
-        for c in range(self.qnts_imgs):
-            img = keras.preprocessing.image.array_to_img(imgs_geradas[c])
-            img.save(f'imgs_geradas/img_{epoca}_{c}.png')
-        
 
-        #salva o gerador
-        with open(f'gerador_{epoca}.h5', 'wb') as f:
+    def on_epoch_end(self, epoch, logs=None):
+        with open('gan.pickle', 'wb') as f:
             pickle.dump(self.model.Gerador, f)
+        ruido = tf.random.normal(shape=(self.num_img, self.tamanho_do_ruido))
+        imgs_geradas = self.model.Gerador(ruido)
+        imgs_geradas *= 255
+        imgs_geradas.numpy()
+        for i in range(self.num_img):
+            img = keras.preprocessing.image.array_to_img(imgs_geradas[i])
+            img.save("generated_img_%03d_%d.png" % (epoch, i))
 
 
-#treina
-epocas = 100
 
-Descriminador = criar_descriminado()
-Gerador = criar_gerador()
-rede_neural_convolucional_generativa_adversaria = GAN(Descriminador, Gerador, tamnho_do_ruido=128)
+epochs = 100 
 
-rede_neural_convolucional_generativa_adversaria.compile(
-    D_optimizador=keras.optimizers.Adam(learning_rate=0.0001),
-    G_optimizador=keras.optimizers.Adam(learning_rate=0.0001),
-    loss_fn= keras.losses.BinaryCrossentropy()
+gan = GAN(Descriminador=Descriminador, Gerador=Gerador, tamanho_do_ruido=tamanho_do_ruido)
+gan.compile(
+    d_optimizer=keras.optimizers.Adam(learning_rate=0.0001),
+    g_optimizer=keras.optimizers.Adam(learning_rate=0.0001),
+    loss_fn=keras.losses.BinaryCrossentropy(),
 )
 
-
-rede_neural_convolucional_generativa_adversaria.fit(
-    dataset,
-    epochs=epocas,
-    callbacks=[Calback_q_salva_as_imgs(qnts_imgs=3, tamanho_do_ruido=128)]
+gan.fit(
+    dataset, epochs=epochs, callbacks=[Callback_q_monitora_a_gan(num_img=10, tamanho_do_ruido=tamanho_do_ruido)]
 )
-
-
-#salva o Gerador
-with open('Gerador.pkl', 'wb') as f:
-    pickle.dump(rede_neural_convolucional_generativa_adversaria.Gerador, f)
 
 #salva a classe 
-with open('GAN_cifar10.pkl', 'wb') as f:
-    pickle.dump(rede_neural_convolucional_generativa_adversaria, f)
+with open('gan.pickle', 'wb') as f:
+    pickle.dump(gan, f)
+
+
 
 
     

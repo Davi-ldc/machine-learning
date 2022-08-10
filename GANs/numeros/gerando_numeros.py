@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from keras.models import load_model
 
 print("Carregando modelo...")
-Gerador = load_model('modelos/gerador_numeros.h5')
+Gerador = load_model('modelos\gerador_numeros.h5')
 print("Modelo carregado!")
 
 noise = 100

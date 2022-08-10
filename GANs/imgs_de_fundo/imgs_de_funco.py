@@ -1,4 +1,3 @@
-!mkdir reshaped_imgs
 
 import numpy as np
 import os
@@ -9,16 +8,16 @@ from keras.models import Sequential
 from keras.optimizers import adam_v2
 import matplotlib.pyplot as plt
 
-imgs_path = "/datasets/bob_roz/"
+imgs_path = "dataDL/bobross2/"
 
 reshape_size = (64, 64)
 
-i = 0
-for img in os.listdir(imgs_path):
-    imagem = cv2.imread(imgs_path + img)
-    imagem = cv2.resize(imagem, reshape_size)
-    cv2.imwrite("reshaped_imgs/%d.png" % i, imagem)
-    i += 1
+# i = 0
+# for img in os.listdir(imgs_path):
+#     imagem = cv2.imread(imgs_path + img)
+#     imagem = cv2.resize(imagem, reshape_size)
+#     cv2.imwrite("reshaped_imgs/%d.png" % i, imagem)
+#     i += 1
 
 
 largura_da_imagem = 64
@@ -39,15 +38,12 @@ def criar_gerador():
     Gerador.add(Conv2DTranspose(filters=256, kernel_size=(4, 4), strides=(2, 2), padding='same'))
     #RETORNA UMA MATRIX DE 8 X 8
     Gerador.add(LeakyReLU(alpha=0.2))
-    Gerador.add(BatchNormalization())
     Gerador.add(Conv2DTranspose(filters=128, kernel_size=(4, 4), strides=(2, 2), padding='same'))
     #RETORNA UMA MATRIX DE 16 X 16
     Gerador.add(LeakyReLU(alpha=0.2))
-    Gerador.add(BatchNormalization())
-    Gerador.add(Conv2DTranspose(filters=64, kernel_size=(4, 4), strides=(2, 2), padding='same'))
+    Gerador.add(Conv2DTranspose(filters=128, kernel_size=(4, 4), strides=(2, 2), padding='same'))
     #RETORNA UMA MATRIX DE 32 X 32
     Gerador.add(LeakyReLU(alpha=0.2))
-    Gerador.add(BatchNormalization())
      
     Gerador.add(Conv2D(3, (3, 3), activation='tanh', padding='same'))
     #3 pq é RGB tanh pq enquanto maior o valor mais branco é img e tem um MAX no relu
@@ -60,4 +56,6 @@ Gerador = criar_gerador()
 
 
     
+def criar_descriminador():
+    Descriminador = Sequential()
     

@@ -3,6 +3,7 @@ from keras.datasets import mnist
 from keras.models import Sequential
 from keras.layers import Dense, Reshape, Flatten, LeakyReLU, BatchNormalization, Conv2D, MaxPooling2D
 from keras.optimizers import adam_v2
+from keras.layers import Conv2DTranspose, Input
 
 
 import matplotlib.pyplot as plt
@@ -23,35 +24,44 @@ adam = adam_v2.Adam(learning_rate=0.0001)
 
 def criar_gerador():
     Gerador = Sequential()
-
-    Gerador.add(Dense(512, input_dim=ruido))
-    Gerador.add(LeakyReLU(alpha=0.2))
-    Gerador.add(BatchNormalization(momentum=0.8))
-
-    Gerador.add(Dense(256))
-    Gerador.add(LeakyReLU(alpha=0.2))
-    Gerador.add(BatchNormalization(momentum=0.8))
     
-    
-    Gerador.add(Dense(128))
+    Gerador.add(Input(shape=(ruido,)))
+    Gerador.add(Dense(7 * 7 * 128))
     Gerador.add(LeakyReLU(alpha=0.2))
-    Gerador.add(BatchNormalization(momentum=0.8))
+    Gerador.add(Reshape((7, 7, 128)))
 
-    Gerador.add(Dense(np.prod(tamnho_da_imagem), activation='tanh'))
-    #sempre usa tanh no final do gerador
-    Gerador.add(Reshape(tamnho_da_imagem))
+    Gerador.add(Conv2DTranspose(filters=128, kernel_size=4, strides=2, padding='same', input_shape=(ruido,)))
+    Gerador.add(LeakyReLU(alpha=0.2))
+    
+
+    Gerador.add(Conv2DTranspose(filters=128, kernel_size=4, strides=2, padding='same'))
+    Gerador.add(LeakyReLU(alpha=0.2))
+    
+    Gerador.add(Conv2DTranspose(filters=256, kernel_size=4, strides=2, padding='same'))
+    Gerador.add(LeakyReLU(alpha=0.2))
+    
+
+    #saida
+    Gerador.add(Conv2D(filters=1, kernel_size=4, strides=2, padding='same', activation='tanh'))
+    print(Gerador.summary())
     return Gerador
 
 
 
 def Criar_Descriminador():
     Descriminador = Sequential()
-    Descriminador.add(Flatten(input_shape=tamnho_da_imagem))
-    Descriminador.add(Dense(512))
+    
+    Descriminador.add(Conv2D(filters=32, kernel_size=4, strides=2, padding='same', input_shape=tamnho_da_imagem))
     Descriminador.add(LeakyReLU(alpha=0.2))
-    Descriminador.add(Dense(256))
-    Descriminador.add(Dense(1, activation='sigmoid'))
+    
+    Descriminador.add(Conv2D(filters=64, kernel_size=4, strides=2, padding='same'))
+    Descriminador.add(LeakyReLU(alpha=0.2))
+    
+    Descriminador.add(Conv2D(filters=128, kernel_size=4, strides=2, padding='same'))
+    Descriminador.add(LeakyReLU(alpha=0.2))
 
+    Descriminador.add(Flatten(input_shape=tamnho_da_imagem))
+    Descriminador.add(Dense(1, activation='sigmoid'))
     return Descriminador
 
 
@@ -59,7 +69,7 @@ def Criar_Descriminador():
 Gerador = criar_gerador()
 Descriminador = Criar_Descriminador()
 Descriminador.compile(loss='binary_crossentropy', optimizer=adam, metrics=['accuracy'])
-Descriminador.trainable = False#congela o gerador
+Descriminador.trainable = False#congela o descriminador
 
 
 GAN = Sequential()
@@ -95,6 +105,7 @@ def treinar(epocas, batch_size=30000, save_interval=200):
         imgs_geradas = Gerador.predict(noise)
 
         #Train discriminator
+        print(imgs.shape, classes.shape)
         d_loss_real = Descriminador.train_on_batch(imgs, classes)#faz só uma interação
         d_loss_fake = Descriminador.train_on_batch(imgs_geradas, classes_falsas)
         d_loss = 0.5 * np.add(d_loss_real, d_loss_fake)
@@ -135,7 +146,7 @@ def treinar(epocas, batch_size=30000, save_interval=200):
                     # axs[i,j].imshow(gen_imgs[cnt])
                     axs[i,j].axis('off')
                     cnt += 1
-            fig.savefig("drive/MyDrive/imagem/%.8f.png" % save_name)
+            fig.savefig("imagem/%.8f.png" % save_name)
             print('saved')
             plt.close()
         
