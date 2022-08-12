@@ -1,4 +1,5 @@
-
+!mkdir reshaped_imgs
+!mkdir imagem
 import numpy as np
 import os
 import cv2
@@ -8,20 +9,17 @@ from keras.models import Sequential
 from keras.optimizers import adam_v2
 import matplotlib.pyplot as plt
 from PIL import Image
+save_name = 0
+imgs_path = "/content/drive/MyDrive/bobross2/"
 
-imgs_path = "/datasets/bob_roz"
-
-
-reshape_size = (64,64)
+reshape_size = (64, 64)
 
 i = 0
-for image in os.listdir(images_path):
-  # print(image)
-  img = cv2.imread(images_path + image)
-  img = cv2.resize(img, reshape_size)
-  cv2.imwrite("resized_images/%d.png" % i,img)
-  # # print(img.shape)
-  i = i+1
+for img in os.listdir(imgs_path):
+    img = cv2.imread(imgs_path + img)
+    img = cv2.resize(img, reshape_size)
+    cv2.imwrite("reshaped_imgs/%d.png" % i, img)
+    i += 1
 
 
 largura_da_imagem = 64
@@ -33,55 +31,51 @@ adam = adam_v2.Adam(learning_rate=0.0002)
 
 
 
-def criar_gerador():
-    Gerador = Sequential()
-    Gerador.add(Dense(units=256 * 8 * 8, input_dim=tamanho_do_ruido))
-    Gerador.add(LeakyReLU(alpha=0.2))
-    Gerador.add(Reshape(target_shape=(8, 8, 256)))
-     
-    Gerador.add(Conv2DTranspose(filters=256, kernel_size=(3, 3), padding='same'))
-    #RETORNA UMA MATRIX DE 8 X 8
-    Gerador.add(LeakyReLU(alpha=0.2))
-    Gerador.add(Conv2DTranspose(filters=128, kernel_size=(3, 3), padding='same'))
-    #RETORNA UMA MATRIX DE 16 X 16
-    Gerador.add(LeakyReLU(alpha=0.2))
-    Gerador.add(Conv2DTranspose(filters=128, kernel_size=(3, 3), padding='same'))
-    #RETORNA UMA MATRIX DE 32 X 32
-    Gerador.add(LeakyReLU(alpha=0.2))
-     
-    Gerador.add(Conv2D(3, (3, 3), activation='tanh', padding='same'))
-    #3 pq é RGB tanh pq enquanto maior o valor mais branco é img e tem um MAX no relu
-    #ja tanh retorna numeros negativos
-    print(Gerador.summary())
-    return Gerador
+def criar_gerador():    
+    model = Sequential()
+    model.add(Dense(256 * 8* 8, input_dim=tamanho_do_ruido))
+    model.add(LeakyReLU(alpha=0.2))
+    model.add(Reshape((8,8,256)))
+
+    model.add(Conv2DTranspose(128, (4,4), strides=(2,2), padding='same'))
+    model.add(LeakyReLU(alpha=0.2))
+
+    model.add(Conv2DTranspose(128, (4,4), strides=(2,2), padding='same'))
+    model.add(LeakyReLU(alpha=0.2))
+
+    model.add(Conv2DTranspose(128, (4,4), strides=(2,2), padding='same'))
+    model.add(LeakyReLU(alpha=0.2))
+
+    model.add(Conv2D(3, (3,3), activation='tanh', padding='same'))
+    return model
 
 Gerador = criar_gerador()
-
+print(Gerador.summary())
 
 
     
 def criar_descriminador():
-    Descriminador = Sequential()
-    Descriminador.add(Conv2D(filters=64, kernel_size=(3, 3), padding='same', input_shape=tamnho_da_imagem))
-    Descriminador.add(LeakyReLU(alpha=0.2))
+    model = Sequential()
+    model.add(Conv2D(64, (3,3), padding='same', input_shape=tamnho_da_imagem))
+    model.add(LeakyReLU(alpha=0.2))
+
+    model.add(Conv2D(128, (3,3), padding='same', ))
+    model.add(LeakyReLU(alpha=0.2))
     
-    Descriminador.add(Conv2D(filters=128, kernel_size=(3, 3), padding='same'))
-    Descriminador.add(LeakyReLU(alpha=0.2))
-     
-    Descriminador.add(Conv2D(filters=128, kernel_size=(3, 3), padding='same'))
-    Descriminador.add(LeakyReLU(alpha=0.2))
-     
-    Descriminador.add(Conv2D(filters=256, kernel_size=(3, 3), padding='same'))
-    Descriminador.add(LeakyReLU(alpha=0.2))
-     
-    Descriminador.add(Flatten())
+    model.add(Conv2D(128, (3,3), padding='same'))
+    model.add(LeakyReLU(alpha=0.2))
+
+    model.add(Conv2D(256, (3,3), padding='same'))
+    model.add(LeakyReLU(alpha=0.2))
+
+    model.add(Flatten())
+    model.add(Dropout(0.4))
+    model.add(Dense(1, activation='sigmoid'))
     
-    Descriminador.add(Dense(units=1, activation='sigmoid'))
-    print(Descriminador.summary())
-    
-    return Descriminador
+    return model
 
 Descriminador = criar_descriminador()
+print(Descriminador.summary())
 Descriminador.compile(loss='binary_crossentropy', optimizer=adam, metrics=['accuracy'])
 
 Descriminador.trainable = False
@@ -182,4 +176,5 @@ D_loss, G_loss = treinar(epocas=22000, batch_size=32, save_interval=200)
 Gerador.save("gerador.h5")
 
         
+
 
