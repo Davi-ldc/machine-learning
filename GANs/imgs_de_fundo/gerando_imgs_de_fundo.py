@@ -1,10 +1,11 @@
-from keras.models import load_model
 import numpy as np
 import matplotlib.pyplot as plt
+import pickle
  
 tamhnho_do_ruido = 100
 print("Carregando o modelo...")
-gerador = load_model("modelos\Gerador_igs_de_fundo.h5")
+with open("GERADOR.pkl", "rb") as f:
+    gerador = pickle.load(f)
 print("Modelo carregado!")
 noise = np.random.normal(0, 1, (16, tamhnho_do_ruido))
 gen_imgs = gerador.predict(noise)

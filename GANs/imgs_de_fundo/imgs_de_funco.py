@@ -1,5 +1,3 @@
-!mkdir reshaped_imgs
-!mkdir imagem
 import numpy as np
 import os
 import cv2
@@ -174,6 +172,11 @@ D_loss, G_loss = treinar(epocas=22000, batch_size=32, save_interval=200)
 
 #salva o gerador:
 Gerador.save("gerador.h5")
+import pickle as pkl
+
+with open('GERADOR.pkl', 'wb') as f:
+    pkl.dump(Gerador, f)
+
 
         
 
