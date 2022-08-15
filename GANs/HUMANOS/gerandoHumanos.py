@@ -8,7 +8,7 @@ num_img = 10
 tamanho_do_ruido = 128
 ruido = tf.random.normal(shape=(num_img, tamanho_do_ruido))
 print("Carregando modelo...")
-Gerador = load_model('Pessoas.h5')
+Gerador = load_model('modelos\pessoas.h5')
 print("Modelo carregado!")
 imgs_geradas = Gerador(ruido)
 imgs_geradas *= 255
