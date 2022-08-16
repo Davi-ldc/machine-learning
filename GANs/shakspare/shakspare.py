@@ -82,3 +82,7 @@ Gerador.fit(xs, ys, epochs=100, verbose=1)
 
 #salva o modelo
 Gerador.save('Gerador.h5')
+#salva o tokenizer
+import pickle
+with open('tokenizer.pickle', 'wb') as handle:
+    pickle.dump(tokenizer, handle, protocol=pickle.HIGHEST_PROTOCOL)
