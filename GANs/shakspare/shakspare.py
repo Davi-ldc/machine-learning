@@ -5,6 +5,7 @@ from keras.utils import pad_sequences
 from keras.layers import LSTM, Dense, Dropout, Embedding, Bidirectional
 from keras.models import Sequential
 from keras.optimizers.optimizer_v2.adam import Adam
+from keras.regularizers import l2
 
 #base d dados:
 #!wget --no-check-certificate https://storage.googleapis.com/laurencemoroney-blog.appspot.com/sonnets.txt -O sonnets.txt
@@ -66,9 +67,9 @@ ys = tf.keras.utils.to_categorical(labels, num_classes=total_words)
 
 Gerador = Sequential()
 Gerador.add(Embedding(total_words, 100, input_length=maior_tamnho-1))
-Gerador.add(LSTM(150, return_sequences=True))#return_sequences=True significa que vc vai ter mais uma lstm dps dessa
+Gerador.add(Bidirectional(LSTM(150, return_sequences=True)))#return_sequences=True significa que vc vai ter mais uma lstm dps dessa
 Gerador.add(Dropout(0.2))
-Gerador.add(LSTM(100))
+Gerador.add(Bidirectional(LSTM(100, kernel_regularizer=l2(0.01))))
 Gerador.add(Dense(total_words // 2, activation='relu'))
 Gerador.add(Dense(total_words, activation='softmax'))
 
