@@ -21,4 +21,31 @@ print(notas)
 
 #deixa as notas na msm escala 
 scaler = MinMaxScaler()
-notes = list(scaler.fit_transform(np.array(notas).reshape(-1,1)))
+notas = list(scaler.fit_transform(np.array(notas).reshape(-1,1)))
+
+
+#vai funcionar assim, classe = proxima nota, previsores 30 notas que vem antes
+
+notas = [list(nota) for nota in notas]
+
+previsores = []
+classes = []
+
+
+for c in range(len(notas) - 30):
+    previsores.append(notas[c:c+30])
+    classes.append(notas[c+30])
+
+
+lstm = Sequential()
+lstm.add(LSTM(units=256, return_sequences=True, input_shape=(30,1)))
+lstm.add(Dropout(0.6))
+lstm.add(LSTM(units=128, return_sequences=True))
+lstm.add(Dropout(0.6))
+lstm.add(LSTM(units=64))
+lstm.add(Dropout(0.6))
+lstm.add(Dense(1))
+lstm.add(Activation('linear'))
+
+optimizer = Adam(lr=0.001)
+lstm.compile(loss='mean_squared_error', optimizer=optimizer)
