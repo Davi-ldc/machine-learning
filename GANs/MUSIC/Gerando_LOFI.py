@@ -88,7 +88,7 @@ def generate_notes(model, network_input, pitchnames, n_vocab):
         prediction_input = numpy.reshape(pattern, (1, len(pattern), 1))
         prediction_input = prediction_input / float(n_vocab)
 
-        prediction = model.predict(prediction_input, verbose=0)
+        prediction = model.predict(prediction_input)
 
         index = numpy.argmax(prediction)
         result = int_to_note[index]
@@ -122,7 +122,9 @@ def create_midi(prediction_output):
         else:
             new_note = note.Note(pattern)
             new_note.offset = offset
-            new_note.storedInstrument = instrument.Piano()
+            new_note.storedInstrument = instrument.ElectricPiano()
+            #new_note.storedInstrument = instrument.Piano()
+            #new_note.storedInstrument = instrument.BongoDrums()
             output_notes.append(new_note)
 
         # increase offset each iteration so that notes do not stack
@@ -130,7 +132,7 @@ def create_midi(prediction_output):
 
     midi_stream = stream.Stream(output_notes)
 
-    midi_stream.write('midi', fp='lofi_output4.mid')
+    midi_stream.write('midi', fp='eletricPiano.mid')
 
 
 generate()

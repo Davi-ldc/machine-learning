@@ -39,7 +39,7 @@ def pegar_notas():
             s2 = instrument.partitionByInstrument(midi)
             notes_to_parse = s2.parts[0].recurse() 
         except: # arquivo tem notas em uma estrutura plana
-            notes_to_parse = midi.flat.notas
+            notes_to_parse = midi.flat.notes
 
         for element in notes_to_parse:
             if isinstance(element, note.Note):
@@ -59,7 +59,7 @@ def prepare_sequences(notas, numero_d_notas):
 
     # get all pitch names
     pitchnames = sorted(set(item for item in notas))
-
+    
      # create a dictionary to map pitches to integers
     note_to_int = dict((note, number) for number, note in enumerate(pitchnames))
 
