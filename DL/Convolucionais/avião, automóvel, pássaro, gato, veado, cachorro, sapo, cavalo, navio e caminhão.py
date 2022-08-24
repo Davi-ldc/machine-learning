@@ -75,4 +75,4 @@ rede_neural_convolucional.fit(previsores_treinamento, y_treinamento, batch_size=
 #cada epoca ele ja mostrar os resultados na base d teste
 
 erro, acuracia = rede_neural_convolucional.evaluate(previsores_teste, y_teste)
-print(f'Erro: {erro}, Acuracia: {acuracia}') # 1.283481240272522, Acuracia: 0.7027000188827515
+print(f'Erro: {erro}, Acuracia: {acuracia}') # Erro: 1.1010288000106812, Acuracia: 0.7595999836921692
