@@ -45,7 +45,7 @@ def sow(tensor, chennels, size=(28,28), qnts_imgs=16):
     plt.show()
 
 
-epcas = 300
+epocas = 300
 cur_step = 0 
 save_interval = 300
 
@@ -142,4 +142,48 @@ print(next(phones_iter))
 # samsung
 # oneplus
 """
+
+#erros:
+
+def cauc_erro_Gerador(loss_fn, G, D, batch_size, tamnho_do_ruido):
+    noise = get_noise(batch_size, tamnho_do_ruido)
+    fake = G(noise)
+    predic = D(fake)
+    classes = torch.ones_like(predic)#vai criar um vetor com varios 1s e a msm dim das previsoes 
+    g_loss = loss_fn(predic, classes)
+    
+    return g_loss
+
+def cauc_D_loss(loss_fn, real, D, G, batch_size, tamnho_do_ruido):
+    noise = get_noise(batch_size, tamnho_do_ruido)
+    fake = G(noise)
+    #detach é pra n atualizar os pesos do gerador
+    
+    predic_fake = D(fake.detach())
+    class_fakes = torch.zeros_like(predic_fake)
+    d_fake_loss = loss_fn(fake, class_fakes)
+    
+    predic_real = D(real)#aq n precisa d detach pq são imgs reais
+    class_real = torch.ones_like(predic_real)
+    d_loss_real = loss_fn(predic_real, class_real)
+    
+    d_loss = (d_loss_real + d_fake_loss) / 2
+    
+    return d_loss
+
+
+#treina:
+
+for epoca in range(epocas):
+    for real, _, in tqdm(dataloader):# _ seria as classes só q eu n vou usar
+        #tqdm é pra ter uma barra de progreço durante o treinamento 
+        
+        des_opt.zero_grad()
+        batch_size_atual = len(real)
+        real = real.view(batch_size_atual, -1)#transforma a matrix 28x28 em um vetor batch_size x 784
+        real = real.to(device)#gpu
+        
+        d_loss = cauc_D_loss(loss_fn, real, des, gen, batch_size, tamnho_do_ruido)
+        d_loss.backward(retain_graph=True)
+
 
