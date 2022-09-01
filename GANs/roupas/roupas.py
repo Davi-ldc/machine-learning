@@ -67,25 +67,26 @@ dataloader = DataLoader(FashionMNIST('.', download=True, transform=transforms.To
 #shuffle=True faz com que agnt sempre troque a ordem das imgs durante o treinamento
 
 def g_block(inp, out):
-    return nn.Sequential([
+    return nn.Sequential(
         nn.Linear(inp, out),#linear ==Dense
         nn.BatchNorm1d(out),
         nn.ReLU(inplace=True)
-    ])
+    )
+    
     
 class Generator(nn.Module):
     def __init__(self, tamnho_do_ruido=64, tamanho_output=128, tamnho_da_img=784):
         super().__init__()
-        Gerador = nn.Sequential([
+        self.Gerador = nn.Sequential(
             g_block(tamnho_do_ruido,tamanho_output),#64, 128
             g_block(tamanho_output, tamanho_output*2),#128, 256
             g_block(tamanho_output*2, tamanho_output*4),#256 512
             g_block(tamanho_output*4, tamanho_output*8),#512 1024
             nn.Linear(tamanho_output*8, tamnho_da_img),#1024, 784
             nn.Sigmoid()
-        ])
+        )
         
-        def forward(self, noise):
+    def forward(self, noise):
             return self.Gerador(noise)
         
 def get_noise(batch_size, size):
@@ -95,22 +96,22 @@ def get_noise(batch_size, size):
     
 #---------------------------------------------------------------------------------------------------------------------
 def d_block(inp, out):
-    return nn.Sequential([
+    return nn.Sequential(
         nn.Linear(inp, out),
         nn.LeakyReLU(0.2),        
-    ])
+    )
 
 class Descriminator(nn.Module):
     def __init__(self, tamnho_da_img=784, tamanho_output=256):
         super().__init__()
-        self.Descriminador = nn.Sequential([
+        self.Descriminador = nn.Sequential(
             d_block(tamnho_da_img, tamanho_output*4),#784, 1024
             d_block(tamanho_output*4, tamanho_output*2),#1024, 512
             d_block(tamanho_output*2, tamanho_output),#512, 256
             nn.Linear(tamanho_output, 1)#256 1
             
             
-        ])
+        )
     def forward(self, img):
         return self.Descriminador(img)
 
@@ -120,3 +121,25 @@ gen_opt = torch.optim.Adam(gen.parameters(), lr=lr)
 
 des = Descriminator().to(device)
 des_opt = torch.optim.Adam(des.parameters(), lr=lr)
+
+
+print(gen, des)
+
+x,y = next(iter(dataloader))
+#x é o previsor e o y é a classe
+
+#a explicação dessa linha ta aq:
+"""
+# list of vowels
+phones = ['apple', 'samsung', 'oneplus']
+phones_iter = iter(phones)
+print(next(phones_iter))   
+print(next(phones_iter))    
+print(next(phones_iter))    
+
+# Output:
+# apple
+# samsung
+# oneplus
+"""
+
