@@ -161,7 +161,7 @@ def cauc_D_loss(loss_fn, real, D, G, batch_size, tamnho_do_ruido):
     
     predic_fake = D(fake.detach())
     class_fakes = torch.zeros_like(predic_fake)
-    d_fake_loss = loss_fn(fake, class_fakes)
+    d_fake_loss = loss_fn(predic_fake, class_fakes)
     
     predic_real = D(real)#aq n precisa d detach pq são imgs reais
     class_real = torch.ones_like(predic_real)
@@ -203,8 +203,8 @@ for epoca in range(epocas):
         if cur_step % save_interval == 0 and cur_step>0:
             fake_noise = get_noise(batch_size_atual, tamnho_do_ruido)
             fake = gen(fake_noise)
-            show(fake)
-            show(real)
+            show(fake, 1)
+            show(real, 1)
             print(f"{epoca}: step {cur_step} / Gen loss: {mean_g_loss} / disc_loss: {mean_d_loss}")
         mean_g_loss = 0
         mean_d_loss = 0
