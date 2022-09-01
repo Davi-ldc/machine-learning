@@ -9,7 +9,7 @@ from torchvision.utils import make_grid
 from tqdm.auto import tqdm #barra d progreço durante o treinamento
 
 
-def sow(tensor, chennels, size=(28,28), qnts_imgs=16):
+def show(tensor, chennels, size=(28,28), qnts_imgs=16):
     #o tensor do treinamento vai ser igual batch_size x 784 (pq 28*28 da 784)
     data = tensor.detach().cpu().view(-1, chennels, *size)#ai esse linha trasforma o tensor no formato de imagem
     #.cpu é pra usar a cpu pra processar 
@@ -183,7 +183,29 @@ for epoca in range(epocas):
         real = real.view(batch_size_atual, -1)#transforma a matrix 28x28 em um vetor batch_size x 784
         real = real.to(device)#gpu
         
-        d_loss = cauc_D_loss(loss_fn, real, des, gen, batch_size, tamnho_do_ruido)
+        d_loss = cauc_D_loss(loss_fn, real, des, gen, batch_size_atual, tamnho_do_ruido)
         d_loss.backward(retain_graph=True)
 
+        des_opt.step()
+        
+        #gerador:
+        
+        gen_opt.zero_grad()
+        gen_loss = cauc_erro_Gerador(loss_fn, gen, des, batch_size_atual, tamnho_do_ruido)
+        gen_loss.backward(retain_graph=True)
+        
+        gen_opt.step()
+        
+        
+        mean_d_loss = d_loss.item() / save_interval
+        mean_g_loss = gen_loss / save_interval
 
+        if cur_step % save_interval == 0 and cur_step>0:
+            fake_noise = get_noise(batch_size_atual, tamnho_do_ruido)
+            fake = gen(fake_noise)
+            show(fake)
+            show(real)
+            print(f"{epoca}: step {cur_step} / Gen loss: {mean_g_loss} / disc_loss: {mean_d_loss}")
+        mean_g_loss = 0
+        mean_d_loss = 0
+        cur_step += 1
