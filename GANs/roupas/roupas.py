@@ -209,3 +209,18 @@ for epoca in range(epocas):
         mean_g_loss = 0
         mean_d_loss = 0
         cur_step += 1
+
+#possiveis problemas        
+"""
+o gerador pode conseguir enganar o gerador gerando somente um tipo de roupa, de forma que de 10 imgs
+ele so aprenda a gerar uma
+
+o loss n ta mt relacionado com a qualidade da img
+
+pode ser q ou o gerador ou o descriminador fiquem mt bons em relção ao outro. ai eles param d aprender
+pq ou o gerador sempre engana o D ou o D nunca é inganado pelo G
+
+pode ser q o gradiente desaparessa 
+
+
+"""
