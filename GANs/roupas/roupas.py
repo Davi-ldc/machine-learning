@@ -223,4 +223,7 @@ pq ou o gerador sempre engana o D ou o D nunca é inganado pelo G
 pode ser q o gradiente desaparessa 
 
 
+pra resolver isso da pra usar Wasserstein loss function
+ai gerador tenta minimizar o loss e descriminador tenta aumentar ele
+nesse caso as previsoes podem ser de 1 a -1 ao invez de 1 a 0
 """
