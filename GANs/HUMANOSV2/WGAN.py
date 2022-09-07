@@ -1,5 +1,4 @@
-from turtle import forward
-import torch, torchvision, os, PIL, pdb, wandb
+import torch, torchvision, os, PIL, pdb
 import numpy as np
 import matplotlib.pyplot as plt
 from torch import nn 
@@ -32,9 +31,8 @@ def show(tensor, qnts_imgs=25, wandbactive=0, name=''):
     torch.Size([5, 2, 3])
     """
     
-    #https://wandb.ai
-    if (wandbactive==1):
-        wandb.log({name:wandb.Image(grid.numpy().clip(0,1))})
+
+
         
     #clip(0,1) significa que
     """
@@ -61,24 +59,6 @@ g_losses = []
 critic_losses = []
 save_interval = 35
 save_steps = 35
-
-wandbactive = 1
-
-#(wandb = pesos e bias)
-wandb.login(key='')
-
-experiment_name = wandb.util.generate_id()
-
-myrun=wandb.init(
-    project="wgan",
-    group=experiment_name,
-    config={
-        "optimizer":"adam",
-        "model":"wgan gp",
-        "epoch":"1000",
-        "batch_size":128
-    }
-)
 
 
  
@@ -171,16 +151,73 @@ path = "celeba_gan/data.zip"
 import gdown, zipfile
 
 
-# load dataset
-import gdown, zipfile
 
+
+import gdown, zipfile
+!mkdir celeba_gan
 
 url = "https://drive.google.com/uc?id=1O7m1010EJjLE5QxLZiM9Fpjs7Oj6e684"
-gdown.download(url, path, quiet=True)
+output = "celeba_gan/data.zip"
+gdown.download(url, output, quiet=True)
 
 with zipfile.ZipFile("celeba_gan/data.zip", "r") as zipobj:
     zipobj.extractall("celeba_gan")
 
-class DataSet():
-    def __init__(self) -> None:
-        pass
+class DataSet(Dataset):
+    def __init__(self, path, size=128, n_imgs = 10000):
+        self.sizes = [size, size]
+        itens, labels = [], []
+        for img in os.listdir(path)[:n_imgs]:
+            iten = os.path.join(path, img)
+            itens.append(iten)
+            labels.append(img)
+        self.itens = itens
+        self.labels = labels
+    
+    def __len__(self):
+        return len(self.itens)
+    
+    def __getitem__(self, index):
+        data = Image.open(self.itens[index]).convert('RGB') # retorna o tamnho da img
+        data = np.asarray(torchvision.transforms.Resize(self.sizes)(data))#deixa a img no tamnho padrão
+        data = np.transpose(data, (2,0,1)).astype(np.float32, copy=False)#pra botar no formato do torch (c h w)
+        data = torch.from_numpy(data).div(255) #é msm coisa q data = np_array_to_tensor / 255
+        return data, self.labels
+    
+
+data_path = '/content/celeba_gan/img_align_celeba'
+ds = DataSet(data_path)
+
+## DataLoader
+dataloader = DataLoader(ds, batch_size=batch_size, shuffle=True)
+
+gen = Gerador(tamnho_do_ruido).to(device)
+crit = Critic().to(device)
+
+gen_opt = torch.optim.Adam(gen.parameters(), lr=lr, betas=(0.5, 0.9))
+crit_opt = torch.optim.Adam(crit.parameters(), lr=lr, betas=(0.5, 0.9))
+
+
+x,y = next(iter(dataloader))
+show(x)
+
+
+def magic(real, fake, crit, alpha, gamma=10):
+  mix_images = real * alpha + fake * (1-alpha) # 128 x 3 x 128 x 128
+  mix_scores = crit(mix_images) # 128 x 1
+
+  gradient = torch.autograd.grad(
+      inputs = mix_images,
+      outputs = mix_scores,
+      grad_outputs=torch.ones_like(mix_scores),
+      retain_graph=True,
+      create_graph=True,
+  )[0] # 128 x 3 x 128 x 128
+
+  gradient = gradient.view(len(gradient), -1)   # 128 x 49152
+  gradient_norm = gradient.norm(2, dim=1) 
+  gp = gamma * ((gradient_norm-1)**2).mean()
+
+  return gp
+
+
