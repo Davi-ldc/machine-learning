@@ -143,7 +143,7 @@ class Critic(nn.Module):
 
     def forward(self, img):
         crtitic_pred = self.critic(img)
-        return crtitic_pred.view(len(crtitic_pred) - 1) #tensor final vai ter shape 128 1 (pra cd parte do batch uma resposta)
+        return crtitic_pred.view(len(crtitic_pred), - 1) #tensor final vai ter shape 128 1 (pra cd parte do batch uma resposta)
     
 
 
