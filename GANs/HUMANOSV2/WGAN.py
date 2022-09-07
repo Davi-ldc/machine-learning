@@ -308,20 +308,20 @@ for epoca in range(epocas):
             crit_mean = sum(critic_losses[-save_interval]) / save_interval
             print(f"Epoch: {epoca}: Step {step_atual}: Generator loss: {generator_mean}, critic loss: {crit_mean}")
             
-        plt.plot(
-            range(len(g_losses)),
-            torch.Tensor(g_losses),
-            label="Generator Loss"
-        )
+            plt.plot(
+                range(len(g_losses)),
+                torch.Tensor(g_losses),
+                label="Generator Loss"
+            )
 
-        plt.plot(
-            range(len(g_losses)),
-            torch.Tensor(critic_losses),
-            label="Critic Loss"
-        )
-        
-        plt.ylim(-150,150)
-        plt.legend()
-        plt.show()
+            plt.plot(
+                range(len(g_losses)),
+                torch.Tensor(critic_losses),
+                label="Critic Loss"
+            )
+            
+            plt.ylim(-150,150)
+            plt.legend()
+            plt.show()
     
     step_atual+=1
