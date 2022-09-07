@@ -10,7 +10,7 @@ from PIL import Image
 
 
 
-def show(tensor, qnts_imgs=25, wandbactive=0, name=''):
+def show(tensor, qnts_imgs=25):
     data = tensor.detach().cpu()
     grid = make_grid(data[:qnts_imgs], nrow=5).permute(1,2,0)
     #             data da posição 0 a posição qnts_imgs
@@ -97,7 +97,7 @@ class Gerador(nn.Module):
         )
         
     def forward(self, noise):
-        x = noise.view()
+        x = noise.view(len(noise), self.tamnho_do_ruido, 1, 1)# 128 x 200 x 1 x 1
         return self.gen(x)
     
 def get_noise(n, tamnho_do_ruido, device='cuda'):
@@ -145,12 +145,6 @@ class Critic(nn.Module):
         crtitic_pred = self.critic(img)
         return crtitic_pred.view(len(crtitic_pred) - 1) #tensor final vai ter shape 128 1 (pra cd parte do batch uma resposta)
     
-
-
-path = "celeba_gan/data.zip"
-import gdown, zipfile
-
-
 
 
 import gdown, zipfile
@@ -221,3 +215,113 @@ def magic(real, fake, crit, alpha, gamma=10):
   return gp
 
 
+#checkpoints
+
+
+pathh = 'content/'
+
+def save_checkpoint(name):
+  torch.save({
+      'epoch': step_atual,
+      'model_state_dict': gen.state_dict(),
+      'optimizer_state_dict': gen_opt.state_dict()      
+  }, f"{pathh}G-{name}.pkl")
+
+  torch.save({
+      'epoch': step_atual,
+      'model_state_dict': crit.state_dict(),
+      'optimizer_state_dict': crit_opt.state_dict()      
+  }, f"{pathh}C-{name}.pkl")
+  
+  print("Saved checkpoint")
+
+def load_checkpoint(name):
+  checkpoint = torch.load(f"{pathh}G-{name}.pkl")
+  gen.load_state_dict(checkpoint['model_state_dict'])
+  gen_opt.load_state_dict(checkpoint['optimizer_state_dict'])
+
+  checkpoint = torch.load(f"{pathh}C-{name}.pkl")
+  crit.load_state_dict(checkpoint['model_state_dict'])
+  crit_opt.load_state_dict(checkpoint['optimizer_state_dict'])
+
+  print("Loaded checkpoint")
+
+
+
+#LOOP D TREINAMENTOOOOOOOO
+
+for epoca in range(epocas):
+    for real, _ in tqdm(dataloader): #_ seria as classes
+        cur_bs = len(real)
+        real = real.to(device)
+
+        for _ in range(critic_cycles):
+            crit_opt.zero_grad()
+            
+            noise = get_noise(cur_bs, tamnho_do_ruido)
+            
+            fake = gen(noise)
+            
+            crit_fake_pred = crit(fake.detach())#pra n atualizar os pesos do gerador
+            crit_real_pred = crit(real)
+            
+            alpha= torch.rand(len(real),1,1,1,device=device, requires_grad=True) # 128 x 1 x 1 x 1
+            
+            gp = magic(real=real, fake=fake.detach(), crit=crit, alpha=alpha)
+            
+            crit_loss = crit_fake_pred.mean() - crit_real_pred.mean() + gp #penalidade do gradiente
+            
+            mean_crit_loss = crit_loss.item() / critic_cycles # pq o loss vai acumular durante os ciclos
+            
+            crit_loss.backward(retain_graph=True)
+            
+            crit_opt.step()
+        critic_losses+=[mean_crit_loss]
+        
+
+        #GENERATOR
+        gen_opt.zero_grad
+        
+        noise = get_noise(cur_bs, tamnho_do_ruido)
+        fake = gen(noise)
+        
+        crit_fake = crit(fake)
+        
+        g_loss = -crit_fake.mean()
+        g_loss.backward()
+        
+        gen_opt.step()
+        
+        g_losses += [g_loss.item()]
+        
+        
+        if (step_atual % save_interval == 0 and step_atual > 0):
+            print("Saving checkpoint: ", step_atual, save_interval)
+            save_checkpoint("latest")
+
+        
+        if (step_atual % save_interval == 0 and step_atual > 0):
+            show(fake)
+            show(real)
+            
+            generator_mean = sum(g_losses[-save_interval:]) / save_interval
+            crit_mean = sum(critic_losses[-save_interval]) / save_interval
+            print(f"Epoch: {epoca}: Step {step_atual}: Generator loss: {generator_mean}, critic loss: {crit_mean}")
+            
+        plt.plot(
+            range(len(g_losses)),
+            torch.Tensor(g_losses),
+            label="Generator Loss"
+        )
+
+        plt.plot(
+            range(len(g_losses)),
+            torch.Tensor(critic_losses),
+            label="Critic Loss"
+        )
+        
+        plt.ylim(-150,150)
+        plt.legend()
+        plt.show()
+    
+    step_atual+=1
