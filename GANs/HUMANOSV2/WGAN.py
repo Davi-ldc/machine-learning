@@ -10,7 +10,7 @@ from PIL import Image
 
 
 
-def show(tensor, qnts_imgs=25):
+def show(tensor, qnts_imgs=25, wandbactive=1, name=''):
     data = tensor.detach().cpu()
     grid = make_grid(data[:qnts_imgs], nrow=5).permute(1,2,0)
     #             data da posição 0 a posição qnts_imgs
@@ -31,7 +31,8 @@ def show(tensor, qnts_imgs=25):
     torch.Size([5, 2, 3])
     """
     
-
+    if (wandbactive==1):
+        wandb.log({name:wandb.Image(grid.numpy().clip(0,1))})
 
         
     #clip(0,1) significa que
@@ -60,17 +61,37 @@ critic_losses = []
 save_interval = 35
 save_steps = 35
 
+wandbact=1 
 
+
+!pip install wandb -qqq
+import wandb
+wandb.login(key='')
+
+experiment_name = wandb.util.generate_id()
+
+myrun=wandb.init(
+    project="wgan",
+    group=experiment_name,
+    config={
+        "optimizer":"adam",
+        "model":"wgan gp",
+        "epoch":"1000",
+        "batch_size":128
+    }
+)
+
+config=wandb.config
  
     
 class Gerador(nn.Module):
-    def __init__(self, tamnho_do_ruido=64, output=64):
+    def __init__(self, tamnho_do_ruido=64, output=16):
         super(Gerador, self).__init__()
         self.tamnho_do_ruido = tamnho_do_ruido
 
         self.gen = nn.Sequential(
 
-            nn.ConvTranspose2d(tamnho_do_ruido, output * 32, 4), ## 4x4
+            nn.ConvTranspose2d(tamnho_do_ruido, output * 32, 4, 1, 0), ## 4x4
             #                 entrada      saida    tamnho_d_kernel
             nn.BatchNorm2d(output*32),
             nn.ReLU(True),
@@ -157,7 +178,7 @@ gdown.download(url, output, quiet=True)
 with zipfile.ZipFile("celeba_gan/data.zip", "r") as zipobj:
     zipobj.extractall("celeba_gan")
 
-class DataSet(Dataset):
+class Dataset(Dataset):
     def __init__(self, path, size=128, n_imgs = 10000):
         self.sizes = [size, size]
         itens, labels = [], []
@@ -176,14 +197,15 @@ class DataSet(Dataset):
         data = np.asarray(torchvision.transforms.Resize(self.sizes)(data))#deixa a img no tamnho padrão
         data = np.transpose(data, (2,0,1)).astype(np.float32, copy=False)#pra botar no formato do torch (c h w)
         data = torch.from_numpy(data).div(255) #é msm coisa q data = np_array_to_tensor / 255
-        return data, self.labels
+        return data, self.labels[index]
     
 
 data_path = '/content/celeba_gan/img_align_celeba'
-ds = DataSet(data_path)
+ds = Dataset(data_path)
 
 ## DataLoader
 dataloader = DataLoader(ds, batch_size=batch_size, shuffle=True)
+
 
 gen = Gerador(tamnho_do_ruido).to(device)
 crit = Critic().to(device)
@@ -191,6 +213,9 @@ crit = Critic().to(device)
 gen_opt = torch.optim.Adam(gen.parameters(), lr=lr, betas=(0.5, 0.9))
 crit_opt = torch.optim.Adam(crit.parameters(), lr=lr, betas=(0.5, 0.9))
 
+if (wandbact==1):
+  wandb.watch(gen, log_freq=100)
+  wandb.watch(crit, log_freq=100)
 
 x,y = next(iter(dataloader))
 show(x)
@@ -294,6 +319,8 @@ for epoca in range(epocas):
         
         g_losses += [g_loss.item()]
         
+        if (wandbact==1):
+          wandb.log({'Epoch': epocas, 'Step': step_atual, 'Critic loss':mean_crit_loss, 'Gen loss': g_loss})
         
         if (step_atual % save_interval == 0 and step_atual > 0):
             print("Saving checkpoint: ", step_atual, save_interval)
@@ -301,11 +328,11 @@ for epoca in range(epocas):
 
         
         if (step_atual % save_interval == 0 and step_atual > 0):
-            show(fake)
-            show(real)
+            show(fake, name='fake')
+            show(real, name='real')
             
             generator_mean = sum(g_losses[-save_interval:]) / save_interval
-            crit_mean = sum(critic_losses[-save_interval]) / save_interval
+            crit_mean = sum(critic_losses[-save_interval:]) / save_interval
             print(f"Epoch: {epoca}: Step {step_atual}: Generator loss: {generator_mean}, critic loss: {crit_mean}")
             
             plt.plot(
@@ -323,5 +350,4 @@ for epoca in range(epocas):
             plt.ylim(-150,150)
             plt.legend()
             plt.show()
-    
-    step_atual+=1
+        step_atual+=1
