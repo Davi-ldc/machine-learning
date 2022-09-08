@@ -353,3 +353,38 @@ for epoca in range(epocas):
             plt.legend()
             plt.show()
         step_atual+=1
+        
+        
+        
+#### Generate new faces
+noise = get_noise(batch_size, tamnho_do_ruido)
+fake = gen(noise)
+show(fake)
+plt.imshow(fake[16].detach().cpu().permute(1,2,0).squeeze().clip(0,1))
+
+from mpl_toolkits.axes_grid1 import ImageGrid
+
+# MORPHING, interpolation between points in latent space
+gen_set=[]
+z_shape=[1,200,1,1]
+rows=4
+steps=17
+
+for i in range(rows):
+  z1,z2 = torch.randn(z_shape), torch.randn(z_shape)
+  for alpha in np.linspace(0,1,steps):
+    z=alpha*z1 + (1-alpha)*z2
+    res=gen(z.cuda())[0]
+    gen_set.append(res)
+
+fig = plt.figure(figsize=(25,11))
+grid=ImageGrid(fig, 111, nrows_ncols=(rows,steps), axes_pad=0.1)
+
+for ax , img in zip (grid, gen_set):
+  ax.axis('off')
+  res=img.cpu().detach().permute(1,2,0)
+  res=res-res.min()
+  res=res/(res.max()-res.min())
+  ax.imshow(res.clip(0,1.0))
+
+plt.show()
