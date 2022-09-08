@@ -45,6 +45,7 @@ def show(tensor, qnts_imgs=25, wandbactive=1, name=''):
     """
     
     plt.imshow(grid.clip(0,1))
+    plt.show()
 
 
 
@@ -66,7 +67,7 @@ wandbact=1
 
 !pip install wandb -qqq
 import wandb
-wandb.login(key='')
+wandb.login(key='👀👀👀👀')
 
 experiment_name = wandb.util.generate_id()
 
@@ -280,6 +281,7 @@ for epoca in range(epocas):
         cur_bs = len(real)
         real = real.to(device)
 
+        mean_crit_loss = 0 
         for _ in range(critic_cycles):
             crit_opt.zero_grad()
             
@@ -305,7 +307,7 @@ for epoca in range(epocas):
         
 
         #GENERATOR
-        gen_opt.zero_grad
+        gen_opt.zero_grad()
         
         noise = get_noise(cur_bs, tamnho_do_ruido)
         fake = gen(noise)
@@ -328,8 +330,8 @@ for epoca in range(epocas):
 
         
         if (step_atual % save_interval == 0 and step_atual > 0):
-            show(fake, name='fake')
-            show(real, name='real')
+            show(fake, wandbactive=1, name='fake')
+            show(real, wandbactive=1, name='real')
             
             generator_mean = sum(g_losses[-save_interval:]) / save_interval
             crit_mean = sum(critic_losses[-save_interval:]) / save_interval
